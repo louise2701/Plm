@@ -19,3 +19,5 @@ Ajouter des statistiques et finances pour la distribution (comment ils nous ont 
 Onglet finances/statistique qui reprend le coût du produit et son revenue (par gamme et par produit) 
 
 Catalogue produit : références, ingrédients, poids et détails packaging..... (avec fonction de recherche) 
+Gestion des tâches : assigner des tâches à des employés = pour synchroniser avec un planning les tâches de tout le monde
+page employés : fonctions et contact
