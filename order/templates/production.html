@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion de la Production</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        /* Ajoutez ici vos styles */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: #A0522D;
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.8);
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #FFD700;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #FFD700;
+            color: #A0522D;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 215, 0, 0.2);
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #A0522D;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #FFD700;
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            margin: 20px;
+        }
+
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px; /* Limit the width */
+        }
+
+        input, select {
+            width: calc(100% - 20px); /* Full width with some padding */
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        .inline {
+            display: inline-block;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Gestion de la Production</h1>
+    </header>
+
+    <form method="post" action="">
+        {% csrf_token %}
+        <h2>Créer une Nouvelle Production</h2>
+        <input type="date" name="date_production" placeholder="Date de Production" required>
+        <select name="planning_id" required>
+            <option value="">Choisir un Planning</option>
+            {% for planning in plannings %}
+                <option value="{{ planning.planning_id }}">{{ planning }}</option>
+            {% endfor %}
+        </select>
+        <select name="product_id" required>
+            <option value="">Choisir un Produit</option>
+            {% for produit in produits %}
+                <option value="{{ produit.product_id }}">{{ produit.nom }}</option>
+            {% endfor %}
+        </select>
+        <input type="number" name="quantite_produite" placeholder="Quantité Produite" required>
+        <input type="text" name="temps_de_production" placeholder="Temps de Production (ex: 4h)" required>
+        <select name="status" required>
+            <option value="">Choisir un Statut</option>
+            <option value="Terminé">Terminé</option>
+            <option value="En cours">En cours</option>
+            <option value="Annulé">Annulé</option>
+        </select>
+        <textarea name="commentaires" placeholder="Commentaires"></textarea>
+        <input type="hidden" name="action" value="create">
+        <button type="submit">Créer Production</button>
+    </form>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Date de Production</th>
+                <th>Planning</th>
+                <th>Produit</th>
+                <th>Quantité Produite</th>
+                <th>Temps de Production</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in productions %}
+                <tr>
+                    <td>{{ item.production.production_id }}</td>
+                    <td>{{ item.production.date_production }}</td>
+                    <td>{{ item.production.planning_id }}</td>
+                    <td>{{ item.product_name }}</td>
+                    <td>{{ item.production.quantite_produite }}</td>
+                    <td>{{ item.production.temps_de_production }}</td>
+                    <td>{{ item.production.status }}</td>
+                    <td>
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="production_id" value="{{ item.production.production_id }}">
+                            <button type="submit" name="action" value="delete">Supprimer</button>
+                        </form>
+                        <button onclick="document.getElementById('edit-{{ item.production.production_id }}').style.display='block'">Modifier</button>
+                    </td>
+                </tr>
+                <tr id="edit-{{ item.production.production_id }}" style="display:none;">
+                    <td colspan="8">
+                        <form method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="production_id" value="{{ item.production.production_id }}">
+                            <input type="date" name="date_production" value="{{ item.production.date_production }}" required>
+                            <select name="planning_id" required>
+                                <option value="">Choisir un Planning</option>
+                                {% for planning in plannings %}
+                                    <option value="{{ planning.planning_id }}" {% if planning.planning_id == item.production.planning_id_id %}selected{% endif %}>{{ planning }}</option>
+                                {% endfor %}
+                            </select>
+                            <select name="product_id" required>
+                                <option value="">Choisir un Produit</option>
+                                {% for produit in produits %}
+                                    <option value="{{ produit.product_id }}" {% if produit.product_id == item.production.product_id_id %}selected{% endif %}>{{ produit.nom }}</option>
+                                {% endfor %}
+                            </select>
+                            <input type="number" name="quantite_produite" value="{{ item.production.quantite_produite }}" placeholder="Quantité Produite" required>
+                            <input type="text" name="temps_de_production" value="{{ item.production.temps_de_production }}" placeholder="Temps de Production (ex: 4h)" required>
+                            <select name="status" required>
+                                <option value="Terminé" {% if item.production.status == 'Terminé' %}selected{% endif %}>Terminé</option>
+                                <option value="En cours" {% if item.production.status == 'En cours' %}selected{% endif %}>En cours</option>
+                                <option value="Annulé" {% if item.production.status == 'Annulé' %}selected{% endif %}>Annulé</option>
+                            </select>
+                            <textarea name="commentaires" placeholder="Commentaires">{{ item.production.commentaires }}</textarea>
+                            <input type="hidden" name="action" value="edit">
+                            <button type="submit">Modifier</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if messages %}
+        <div class="message">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
+
+</html>

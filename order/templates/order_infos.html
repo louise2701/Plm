@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order infos</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        .cart-section {
+            background-color: #f8f8f8;
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .item-name, .item-quantity, .item-action {
+            flex: 1;
+            text-align: center;
+        }
+
+        .item-name {
+            text-align: left;
+        }
+
+        .item-action {
+            text-align: right;
+        }
+
+        .cart-item button {
+            margin-left: 10px;
+            background-color: #ff6666;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            font-size: 12px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        .cart-item button:hover {
+            background-color: #e60000;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Checkout</h1>
+        <p>Provide delivery and payment information</p>
+    </header>
+
+    <section>
+        <div>
+            <h2>Your informations</h2>
+            <form action="{% url 'confirm_order' %}" method="post">
+                {% csrf_token %}
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" value="{{ user_info.email }}" readonly style="background-color: #f0f0f0;">
+
+                <label for="delivery_address">Delivery address:</label>
+                <input type="text" id="delivery_address" name="delivery_address" value="{{ user_info.address }}" required maxlength="50">
+
+                <label for="delivery_postal_code">Delivery postal code:</label>
+                <input type="text" id="delivery_postal_code" name="delivery_postal_code" value="{{ user_info.postal_code }}" required maxlength="5" pattern="\d{5}" title="Please enter a 5-digit postal code number">
+
+                <label for="credit_card">Credit card:</label>
+                <input type="text" id="credit_card" name="credit_card" value="{{ user_info.registered_credit_card }}" required maxlength="16" pattern="\d{16}" title="Please enter a 16-digit credit card number">
+
+                <label for="delivery_option">Delivery options:</label>
+                <select id="delivery_option" name="delivery_option">
+                    <option value="standard">Standard delivery</option>
+                    <option value="express">Express delivery (+5$)</option>
+                </select>
+
+                <input type="hidden" name="cartItems" id="cartItems" value="">
+
+                <button type="submit" name="confirm" class="submit-button">Confirm order</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="cart-section">
+        <h2>Shopping cart</h2>
+        <div id="cart-items">
+            <!-- placeholder for cart items -->
+        </div>
+        <div id="total-price">Total price: $0.00</div>
+    </section>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+    <script>
+        var cartItems = JSON.parse(localStorage.getItem("cartItems")) || {};
+
+        var totalPrice = 0;
+
+        // check which delivery option is selected
+        function checkDeliveryOption() {
+            var deliveryOption = document.getElementById("delivery_option").value;
+
+            if (deliveryOption === "express") {
+                totalPrice += 5;
+            } else {
+                totalPrice -= 5;
+            }
+        }
+
+        function displayPrice() {
+            document.getElementById("total-price").textContent = "Total Price: $" + totalPrice.toFixed(2);
+        }
+
+        // event for when the delivery option is changed
+        document.getElementById("delivery_option").addEventListener("change", function () {
+            // check which delivery option is selected
+            checkDeliveryOption();
+
+            // refresh the total price
+            displayPrice();
+        });
+
+        function updateCartItems(cartItems) {
+            var cartItemsContainer = document.getElementById("cart-items");
+            cartItemsContainer.innerHTML = "";
+
+            for (var item in cartItems) {
+                var cartItemElement = document.createElement("div");
+
+                cartItemElement.className = "cart-item";
+                cartItemElement.innerHTML =
+                    "<div class='item-name'>" + cartItems[item].name + " (" + cartItems[item].price + "$/kg)" + "</div>" +
+                    "<div class='item-quantity'>" + cartItems[item].quantity + "</div>" +
+                    "<div class='item-action'><button onclick=\"removeCartItem('" + cartItems[item].product_id + "')\">Remove</button></div>";
+    
+                cartItemsContainer.appendChild(cartItemElement);
+            }
+
+            // update the hidden input with the cart items
+            document.getElementById("cartItems").value = JSON.stringify(cartItems);
+        }
+
+        function updateTotalPrice() {
+            for (var item in cartItems) {
+                totalPrice += cartItems[item].quantity * cartItems[item].price;
+            }
+
+            // refresh the total price
+            displayPrice();
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            var cartItems = JSON.parse(localStorage.getItem("cartItems")) || {};
+            
+            // get the items from the cart and display them
+            updateCartItems(cartItems);
+
+            // get the prices of the items and display the total price
+            updateTotalPrice();
+        });
+
+        // check if there are still items in the cart
+        function checkCartItems() {
+            var cartItems = JSON.parse(localStorage.getItem("cartItems")) || {};
+            var cartItemsArray = Object.values(cartItems);
+            var cartItemsSum = cartItemsArray.reduce((a, b) => a + b, 0);
+
+            if (cartItemsSum === 0) {
+                alert("There's no more items in your cart, going back to the produces page");
+                window.location.href = "/order/produces/";
+                return;
+            }
+        }
+
+        function removeCartItem(item) {
+            if (cartItems[item]) {
+                cartItems[item].quantity--;
+
+                if (cartItems[item].quantity === 0) {
+                    delete cartItems[item];
+                }
+
+                localStorage.setItem("cartItems", JSON.stringify(cartItems));
+
+                // get the items from the cart and display them
+                updateCartItems(cartItems);
+
+                // reset the total price
+                totalPrice = 0;
+
+                // get the prices of the items and display the total price
+                updateTotalPrice();
+                
+                // check if there are still items in the cart
+                checkCartItems();
+            }
+        }
+    </script>
+</body>
+
+</html>

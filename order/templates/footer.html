@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Footer</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/navbar_footer.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        footer {
+            background-color: #e5e5e5; /* Same background as navbar */
+            color: #A0522D; /* Color inspired by wine for text */
+            text-align: center;
+            padding: 20px 0; /* Padding for the footer */
+            border-top: 5px solid #FFD700; /* Gold border for distinction */
+        }
+
+        .contact-button {
+            background-color: #FFD700; /* Gold background */
+            color: #A0522D; /* Dark wine color for text */
+            text-decoration: none; /* Remove underline */
+            padding: 10px 20px; /* Padding for the button */
+            border-radius: 5px; /* Rounded corners */
+            transition: background-color 0.3s, color 0.3s; /* Transition for hover effect */
+        }
+
+        .contact-button:hover {
+            background-color: #A0522D; /* Dark wine background on hover */
+            color: #FFD700; /* Change text color to gold */
+        }
+
+        .footer-info {
+            margin-top: 10px; /* Margin for better spacing */
+            font-size: 0.9em; /* Slightly smaller font for additional info */
+        }
+    </style>
+</head>
+
+<body>
+    <footer>
+        <p>© 2023 MGO S.A.: Fresh Cheese and Wine at Your Fingertips</p>
+        <a href="{% url 'contact' %}" class="contact-button">Contact</a>
+        <div class="footer-info">
+            Fromages: Camembert, Brie, Emmental, Comté, Mozzarella.<br>
+            Vin: Rouge, Blanc, Rosé, Champagne, Cidre.
+        </div>
+    </footer>
+</body>
+
+</html>

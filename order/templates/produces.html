@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Produits Fromagers et Vins</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed; /* Background image */
+            background-size: cover; /* Cover the entire screen */
+            color: #A0522D; /* Dark wine color for text */
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.8); /* Light background with transparency */
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #FFD700; /* Gold border for distinction */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2em;
+        }
+
+        section {
+            padding: 2em;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for section background */
+            margin: 20px; /* Margin for spacing */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .product {
+            margin-bottom: 20px;
+            text-align: center; /* Center product content */
+        }
+
+        .cart-logo {
+            width: 20px;
+            height: auto;
+            margin-right: 8px;
+        }
+
+        .grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 0 auto; /* Center grid container */
+            max-width: 1200px; /* Max width for the grid */
+        }
+
+        .grid-item {
+            width: calc(33.33% - 20px);
+            margin-bottom: 20px;
+            margin-right: 20px;
+            text-align: center; /* Center text */
+        }
+
+        .grid-item:nth-child(3n) {
+            margin-right: 0; /* Reset margin for the last item in each row */
+        }
+
+        button.submit-button {
+            background-color: #FFD700; /* Gold background for button */
+            color: #A0522D; /* Dark wine color for button text */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover */
+        }
+
+        button.submit-button:hover {
+            background-color: #A0522D; /* Change background on hover */
+            color: #FFD700; /* Change text color on hover */
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+    
+    <header>
+        <h1>Produits Fromagers et Vins</h1>
+        <p>Sélectionnez la quantité pour chaque fromage ou vin</p>
+    </header>
+
+    <section>
+        <button class="submit-button" onclick="goToCart()">
+            <img src="{% static 'cart_logo.jpeg' %}" alt="Logo du panier" class="cart-logo">
+            Aller au panier
+        </button>
+
+        <br><br>
+        
+        <div class="grid-container">
+            {% for product in products %}
+                <div class="product grid-item" id="{{ product.product_id }}">
+                    <img src="{% static product.name|lower|add:'.jpg' %}" alt="{{ product.name|lower }}" />
+                    <h2>{{ product.name }}</h2>
+                    <p id="{{ product.name|lower }}-price">Prix: {{ product.price }}€</p> <!-- Price displayed per unit -->
+                    <label for="{{ product.name|lower }}-quantity">Quantité:</label>
+                    <input type="number" id="{{ product.name|lower }}-quantity" class="quantity" value="0" min="0">
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+    <script id="config" type="application/json">
+        {
+          "staticBaseUrl": "{% static '' %}"
+        }
+    </script>
+
+    <script>
+        var config = JSON.parse(document.getElementById('config').textContent);
+        var staticBaseUrl = config.staticBaseUrl;
+
+        function goToCart() {
+            // Mettre à jour les quantités
+            updateQuantities();
+
+            // Vérifiez qu'au moins un article est sélectionné
+            var cartItems = JSON.parse(localStorage.getItem("cartItems")) || {};
+            var cartItemsArray = Object.values(cartItems);
+            var cartItemsSum = cartItemsArray.reduce((a, b) => a + b.quantity, 0); // Correction pour obtenir la somme des quantités
+
+            if (cartItemsSum === 0) {
+                alert("Veuillez sélectionner au moins un article");
+                return;
+            }
+            
+            window.location.href = "/order/order_infos/";
+        }
+
+        function updateQuantities() {
+            var products = document.querySelectorAll(".product");
+            var cartItems = {};
+
+            products.forEach(function (product) {
+                var product_id = product.id;
+                var name = product.querySelector("h2").textContent.toLowerCase();
+                var quantity = parseInt(document.getElementById(name.toLowerCase() + "-quantity").value) || 0;
+                var price = parseFloat(document.getElementById(name.toLowerCase() + "-price").textContent.split(" ")[1]) || 0;
+
+                if (quantity > 0) {
+                    cartItems[product_id] = {
+                        product_id: product_id,
+                        name: name,
+                        quantity: quantity,
+                        price: price
+                    }
+                }
+            });
+
+            localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        }
+    </script>
+</body>
+
+</html>

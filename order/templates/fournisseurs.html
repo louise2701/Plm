@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Fournisseurs</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: #A0522D; /* Dark wine color for text */
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Light background for header */
+            border-bottom: 5px solid #A0522D; /* Dark wine border */
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #FFD700; /* Gold color for header */
+        }
+
+        section {
+            margin: 0 auto;
+            padding: 20px;
+            width: 80%; /* Adjust width as needed */
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Light grey border */
+        }
+
+        th {
+            background-color: #FFD700; /* Gold background for header */
+            color: #A0522D; /* Dark wine color for header text */
+        }
+
+        tr:hover {
+            background-color: rgba(255, 215, 0, 0.2); /* Highlight row on hover */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-top: 20px;
+        }
+
+        input[type="text"],
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px; /* Rounded corners */
+        }
+
+        button {
+            background-color: #A0522D; /* Dark wine color */
+            color: white; /* White text */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FFD700; /* Gold on hover */
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Gestion des Fournisseurs</h1>
+    </header>
+
+    <section>
+        <h2>Liste des Fournisseurs</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Téléphone</th>
+                    <th>Email</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for fournisseur in fournisseurs %}
+                <tr>
+                    <td>{{ fournisseur.fournisseur_id }}</td>
+                    <td>{{ fournisseur.nom }}</td>
+                    <td>{{ fournisseur.contact.telephone }}</td>
+                    <td>{{ fournisseur.contact.email }}</td>
+                    <td>
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="fournisseur_id" value="{{ fournisseur.fournisseur_id }}">
+                            <button type="submit" name="action" value="delete">Supprimer</button>
+                        </form>
+                        <button onclick="document.getElementById('update-{{ fournisseur.fournisseur_id }}').style.display='block'">Modifier</button>
+                        <div id="update-{{ fournisseur.fournisseur_id }}" style="display:none;">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="fournisseur_id" value="{{ fournisseur.fournisseur_id }}">
+                                <input type="text" name="nom" placeholder="Nom" value="{{ fournisseur.nom }}" required>
+                                <input type="text" name="nom_contact" placeholder="Nom du Contact" value="{{ fournisseur.contact.nom_contact }}" required>
+                                <input type="text" name="telephone" placeholder="Téléphone" value="{{ fournisseur.contact.telephone }}" required>
+                                <input type="email" name="email" placeholder="Email" value="{{ fournisseur.contact.email }}" required>
+                                <input type="text" name="rue" placeholder="Rue" value="{{ fournisseur.adresse.rue }}" required>
+                                <input type="text" name="ville" placeholder="Ville" value="{{ fournisseur.adresse.ville }}" required>
+                                <input type="text" name="code_postal" placeholder="Code Postal" value="{{ fournisseur.adresse.code_postal }}" required>
+                                <input type="text" name="pays" placeholder="Pays" value="{{ fournisseur.adresse.pays }}" required>
+                                <button type="submit" name="action" value="update">Mettre à jour</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Ajouter un Nouveau Fournisseur</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="nom" placeholder="Nom" required>
+            <input type="text" name="nom_contact" placeholder="Nom du Contact" required>
+            <input type="text" name="telephone" placeholder="Téléphone" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="text" name="rue" placeholder="Rue" required>
+            <input type="text" name="ville" placeholder="Ville" required>
+            <input type="text" name="code_postal" placeholder="Code Postal" required>
+            <input type="text" name="pays" placeholder="Pays" required>
+            <button type="submit" name="action" value="add">Ajouter</button>
+        </form>
+    </section>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
+
+</html>

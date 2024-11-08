@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employés</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: #A0522D; /* Dark wine color for text */
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Light background for header */
+            border-bottom: 5px solid #A0522D; /* Dark wine border */
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #FFD700; /* Gold color */
+        }
+
+        section {
+            margin: 0 auto;
+            padding: 20px;
+            width: 80%; /* Adjust width as needed */
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="date"],
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #A0522D; /* Dark wine color */
+            color: white; /* White text */
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FFD700; /* Gold on hover */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Light grey border */
+        }
+
+        th {
+            background-color: #FFD700; /* Gold background */
+            color: #A0522D; /* Dark wine color for header text */
+        }
+
+        tr:hover {
+            background-color: rgba(255, 215, 0, 0.2); /* Highlight row on hover */
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Informations sur les Employés</h1>
+    </header>
+
+    <section>
+        <h2>Ajouter un Nouvel Employé</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="name" placeholder="Nom" required>
+            <input type="text" name="position" placeholder="Poste" required>
+            <input type="text" name="telephone" placeholder="Téléphone" required>
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="date" name="hire_date" required>
+            <input type="hidden" name="action" value="add">
+            <button type="submit">Ajouter Employé</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Poste</th>
+                    <th>Téléphone</th>
+                    <th>Email</th>
+                    <th>Date d'embauche</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employe in employees %}
+                    <tr>
+                        <td>{{ employe.employe_id }}</td>
+                        <td>{{ employe.nom }}</td>
+                        <td>{{ employe.poste }}</td>
+                        <td>{{ employe.contact.telephone }}</td>
+                        <td>{{ employe.contact.email }}</td>
+                        <td>{{ employe.date_embauche }}</td>
+                        <td>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="employe_id" value="{{ employe.employe_id }}">
+                                <input type="text" name="name" value="{{ employe.nom }}" required>
+                                <input type="text" name="position" value="{{ employe.poste }}" required>
+                                <input type="text" name="telephone" value="{{ employe.contact.telephone }}" required>
+                                <input type="email" name="email" value="{{ employe.contact.email }}" required>
+                                <input type="date" name="hire_date" value="{{ employe.date_embauche }}" required>
+                                <input type="hidden" name="action" value="edit">
+                                <button type="submit">Modifier</button>
+                            </form>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="employe_id" value="{{ employe.employe_id }}">
+                                <input type="hidden" name="action" value="delete">
+                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet employé ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {% if messages %}
+            <div class="message">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </section>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
+
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order confirmed</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        img {
+            width: 150px;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .order-summary {
+            background-color: #ddd;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Confirmation!</h1>
+        <p>Here's a recap for your order</p>
+    </header>
+
+    <section>
+        <div class="order-summary">
+            <h2>Order summary</h2>
+            <p><strong>Email:</strong> {{ user_email }}</p>
+            <p><strong>Order ID:</strong> {{ order_id }}</p>
+            <p><strong>Order date:</strong> {{ order_date }}</p>
+            <hr>
+    
+            <div class="order-items">
+                {% for item_id, item in cartItems.items %}
+                    <div class="order-item">
+                        <img class="product-image" src="{% static item.name ~ %}.jpg" alt="{{ item.name }}" />
+                        <div class="product-details">
+                            <p><strong>{{ item.name }}</strong></p>
+                            <p>Quantity: {{ item.quantity }}</p>
+                            <p>Price per unit: ${{ item.price }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+    
+            <hr>
+            {% if delivery_option %}
+                <p><strong>+ $5 for the express delivery option</p>
+            {% endif %}
+            <p><strong>Total:</strong> ${{ total_price|floatformat:2 }}</p>
+        </div>
+    </section>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
+
+</html>

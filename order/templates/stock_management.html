@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion du Stock</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: #A0522D; /* Dark wine color for text */
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+            color: #FFD700; /* Gold color for the header */
+            background-color: rgba(255, 255, 255, 0.8); /* Light background with transparency */
+            border-bottom: 5px solid #A0522D; /* Dark wine border */
+            margin: 0;
+        }
+
+        table {
+            width: 80%; /* Set table width */
+            margin: 20px auto; /* Center the table */
+            border-collapse: collapse; /* Combine borders */
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Light grey border */
+        }
+
+        th {
+            background-color: #FFD700; /* Gold background for header */
+            color: #A0522D; /* Dark wine color for header text */
+        }
+
+        tr:hover {
+            background-color: rgba(255, 215, 0, 0.2); /* Highlight row on hover */
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Space between elements */
+        }
+
+        select, input[type="number"] {
+            padding: 5px;
+            border-radius: 5px; /* Rounded corners for inputs */
+            border: 1px solid #ddd; /* Light border */
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #A0522D; /* Dark wine color */
+            color: white; /* White text */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        button:hover {
+            background-color: #FFD700; /* Change color on hover */
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            margin: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Gestion du Stock</h1>
+    </header>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Nom du Produit</th>  <!-- Changer pour afficher le nom du produit -->
+                <th>Stock</th>
+                <th>Action</th>
+                <th>Quantité</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for product in products %}
+            <tr>
+                <td>{{ product.name }}</td>  <!-- Afficher le nom ici -->
+                <td>{{ product.stock }}</td>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                        <select name="action">
+                            <option value="increase">Augmenter</option>
+                            <option value="decrease">Réduire</option>
+                        </select>
+                        <input type="number" name="amount" min="1" required>
+                        <button type="submit">Modifier</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if messages %}
+        <div class="message">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
+</html>

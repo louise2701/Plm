@@ -1,0 +1,414 @@
+{
+    "order_client": [
+        {
+            "email": "test@test.com",
+            "password": "test",
+            "first_name": "FName",
+            "last_name": "testLName",
+            "phone_number": "0123456789",
+            "address": "testAddress",
+            "postal_code": "12345",
+            "registered_credit_card": "1234567891234567"
+        },
+        {
+            "email": "john.doe@email.com",
+            "password": "motdepasse1",
+            "first_name": "John",
+            "last_name": "Doe",
+            "phone_number": "1234567890",
+            "address": "123 Rue des Fleurs",
+            "postal_code": "75001",
+            "registered_credit_card": "1234567891234567"
+        },
+        {
+            "email": "jane.smith@email.com",
+            "password": "motdepasse2",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "phone_number": "9876543210",
+            "address": "456 Avenue des \u00c3\u2030toiles",
+            "postal_code": "75002",
+            "registered_credit_card": "1234567891234567"
+        }
+    ],
+    "order_order": [
+        {
+            "order_id": 1,
+            "order_date": "2023-01-01",
+            "delivery_date": "2023-01-03",
+            "delivery_option": "Express",
+            "delivery_address": "123 Rue des Fleurs",
+            "delivery_postal_code": "75001",
+            "status": "Pending",
+            "total_price": 15.7,
+            "credit_card": "1234567891234567",
+            "email_id": "john.doe@email.com"
+        },
+        {
+            "order_id": 2,
+            "order_date": "2023-01-05",
+            "delivery_date": "2023-01-07",
+            "delivery_option": "Standard",
+            "delivery_address": "456 Avenue des \u00c3\u2030toiles",
+            "delivery_postal_code": "75002",
+            "status": "Delivered",
+            "total_price": 20.0,
+            "credit_card": "1234567891234567",
+            "email_id": "jane.smith@email.com"
+        }
+    ],
+    "order_product": [
+        {
+            "product_id": 1,
+            "stock": 100
+        },
+        {
+            "product_id": 2,
+            "stock": 50
+        },
+        {
+            "product_id": 3,
+            "stock": 75
+        }
+    ],
+    "order_fiche_produit": [
+        {
+            "product_id": 1,
+            "reference": "CAM_001",
+            "nom": "Camembert standard",
+            "ingredients": [
+                "Lait de vache",
+                "Sel",
+                "Culture de ferments",
+                "Pr\u00c3\u00a9sure"
+            ],
+            "processus_de_fabrication": "Lait pasteuris\u00c3\u00a9 chauff\u00c3\u00a9, additionn\u00c3\u00a9 de ferments, caillage, moulage, \u00c3\u00a9gouttage, salage, affinage.",
+            "specifications": {
+                "poids": "250g",
+                "dur\u00c3\u00a9e_d_affinage": "4 semaines",
+                "type_de_fromage": "P\u00c3\u00a2te molle"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-01-15",
+                "modifications": "Recette initiale."
+            }
+        },
+        {
+            "product_id": 2,
+            "reference": "CAM_002",
+            "nom": "Camembert modifi\u00c3\u00a9",
+            "ingredients": [
+                "Lait de vache",
+                "Sel",
+                "Culture de ferments",
+                "Pr\u00c3\u00a9sure",
+                "\u00c3\u2030pices"
+            ],
+            "processus_de_fabrication": "Lait pasteuris\u00c3\u00a9 chauff\u00c3\u00a9, additionn\u00c3\u00a9 de ferments, caillage, moulage, ajout d'\u00c3\u00a9pices, \u00c3\u00a9gouttage, salage, affinage.",
+            "specifications": {
+                "poids": "250g",
+                "dur\u00c3\u00a9e_d_affinage": "5 semaines",
+                "type_de_fromage": "P\u00c3\u00a2te molle"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-02-10",
+                "modifications": "Ajout d'\u00c3\u00a9pices \u00c3\u00a0 la recette."
+            }
+        },
+        {
+            "product_id": 3,
+            "reference": "CAM_003",
+            "nom": "Camembert bio",
+            "ingredients": [
+                "Lait de vache bio",
+                "Sel",
+                "Culture de ferments",
+                "Pr\u00c3\u00a9sure"
+            ],
+            "processus_de_fabrication": "Lait bio pasteuris\u00c3\u00a9 chauff\u00c3\u00a9, additionn\u00c3\u00a9 de ferments, caillage, moulage, \u00c3\u00a9gouttage, salage, affinage.",
+            "specifications": {
+                "poids": "250g",
+                "dur\u00c3\u00a9e_d_affinage": "6 semaines",
+                "type_de_fromage": "P\u00c3\u00a2te molle"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-03-05",
+                "modifications": "Recette bio."
+            }
+        },
+        {
+            "product_id": 4,
+            "reference": "VIN_001",
+            "nom": "AOP",
+            "ingredients": [
+                "raisins rouge bio",
+                "Sucre",
+                "bois de ch\u00c3\u00aane",
+                "\u00c3\u00a9pluchure de citron"
+            ],
+            "processus_de_fabrication": "R\u00c3\u00a9colte des vendenges, pi\u00c3\u00a9tinage des raisons fraichement r\u00c3\u00a9colt\u00c3\u00a9, affinage en fut de ch\u00c3\u00aane.",
+            "specifications": {
+                "poids": "450g",
+                "dur\u00c3\u00a9e_d_affinage": "7 mois",
+                "type_de_vin": "Ros\u00c3\u00a9"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-03-05",
+                "modifications": "Recette bio."
+            }
+        }
+    ],
+    "order_fournisseurs": [
+        {
+            "fournisseur_id": 1,
+            "nom": "Fromagerie Artisanale",
+            "contact": {
+                "nom_contact": "Jean Dupont",
+                "telephone": "+33 1 23 45 67 89",
+                "email": "jean.dupont@fromagerieartisanale.fr"
+            },
+            "adresse": {
+                "rue": "12 Rue des Fromages",
+                "ville": "Paris",
+                "code_postal": "75001",
+                "pays": "France"
+            },
+            "produits_fournis": 3
+        },
+        {
+            "fournisseur_id": 2,
+            "nom": "Lait & Terroir",
+            "contact": {
+                "nom_contact": "Marie Curie",
+                "telephone": "+33 1 98 76 54 32",
+                "email": "marie.curie@laitetterroir.fr"
+            },
+            "adresse": {
+                "rue": "45 Avenue des Fermiers",
+                "ville": "Lyon",
+                "code_postal": "69001",
+                "pays": "France"
+            },
+            "produits_fournis": 1
+        },
+        {
+            "fournisseur_id": 3,
+            "nom": "\u00c3\u2030picerie Fine",
+            "contact": {
+                "nom_contact": "Paul Martin",
+                "telephone": "+33 1 34 56 78 90",
+                "email": "paul.martin@epiceriefine.fr"
+            },
+            "adresse": {
+                "rue": "78 Boulevard des Saveurs",
+                "ville": "Marseille",
+                "code_postal": "13001",
+                "pays": "France"
+            },
+            "produits_fournis": 2
+        }
+    ],
+    "order_sous_traitants": [
+        {
+            "sous_traitant_id": 1,
+            "nom": "Fabrication Externe SA",
+            "contact": {
+                "nom_contact": "Alice Bernard",
+                "telephone": "+33 1 12 34 56 78",
+                "email": "alice.bernard@fabricationexterne.fr"
+            },
+            "adresse": {
+                "rue": "15 Rue des Artisans",
+                "ville": "Toulouse",
+                "code_postal": "31000",
+                "pays": "France"
+            },
+            "services_fournis": [
+                "Emballage",
+                "Logistique"
+            ],
+            "produits_traites": 1
+        },
+        {
+            "sous_traitant_id": 2,
+            "nom": "Transport & Co",
+            "contact": {
+                "nom_contact": "Marc Lefevre",
+                "telephone": "+33 1 98 76 54 32",
+                "email": "marc.lefevre@transportco.fr"
+            },
+            "adresse": {
+                "rue": "22 Avenue de la Logistique",
+                "ville": "Nantes",
+                "code_postal": "44000",
+                "pays": "France"
+            },
+            "services_fournis": [
+                "Transport",
+                "Stockage"
+            ],
+            "produits_traites": 3
+        }
+    ],
+    "order_employes": [
+        {
+            "employe_id": 1,
+            "nom": "Lucie Martin",
+            "poste": "Directrice de production",
+            "contact": {
+                "telephone": "+33 1 22 33 44 55",
+                "email": "lucie.martin@fromagerie.fr"
+            },
+            "adresse": {
+                "rue": "10 Boulevard de l'Industrie",
+                "ville": "Strasbourg",
+                "code_postal": "67000",
+                "pays": "France"
+            },
+            "date_embauche": "2020-06-15",
+            "competences": [
+                "Gestion de production",
+                "Planification",
+                "Contr\u00c3\u00b4le qualit\u00c3\u00a9"
+            ],
+            "mdp": "ALdibidcnz"
+        },
+        {
+            "employe_id": 2,
+            "nom": "Pierre Dubois",
+            "poste": "Technicien de laboratoire",
+            "contact": {
+                "telephone": "+33 1 33 44 55 66",
+                "email": "pierre.dubois@fromagerie.fr"
+            },
+            "adresse": {
+                "rue": "5 Rue des Sciences",
+                "ville": "Lille",
+                "code_postal": "59000",
+                "pays": "France"
+            },
+            "date_embauche": "2019-03-10",
+            "competences": [
+                "Analyse microbiologique",
+                "Contr\u00c3\u00b4le qualit\u00c3\u00a9",
+                "R&D"
+            ],
+            "mdp": "123BIZkbsh"
+        }
+    ],
+    "order_planning": [
+        {
+            "planning_id": 1,
+            "date": "2024-10-21",
+            "shift": "Matin",
+            "employes_assignes": 1,
+            "produits_prepares": 2,
+            "commentaires": "Pr\u00c3\u00a9paration pour la vente du week-end."
+        },
+        {
+            "planning_id": 2,
+            "date": "2024-10-22",
+            "shift": "Apres-midi",
+            "employes_assignes": 2,
+            "produits_prepares": 3,
+            "commentaires": "Contr\u00c3\u00b4le qualit\u00c3\u00a9 des produits bio."
+        }
+    ],
+    "ProduitPreparation":[
+      {
+         "product_id":2,
+         "quantite":100,
+         "planning_id":1
+      },
+      {
+         "product_id":3,
+         "quantite":75,
+         "planning_id":2
+      }
+    ],
+    "order_production": [
+        {
+            "production_id": 1,
+            "planning_id": 1,
+            "date_production": "2024-10-21",
+            "product_id": 1,
+            "quantite_produite": 100,
+            "temps_de_production": "4h",
+            "status": "Termin\u00c3\u00a9",
+            "commentaires": "Production conforme aux normes."
+        },
+        {
+            "production_id": 2,
+            "planning_id": 2,
+            "date_production": "2024-10-22",
+            "product_id": 3,
+            "quantite_produite": 75,
+            "temps_de_production": "3h",
+            "status": "Termin\u00c3\u00a9",
+            "commentaires": "Produit bio contr\u00c3\u00b4l\u00c3\u00a9 avec succ\u00c3\u00a8s."
+        }
+    ],
+    "order_cheese": [
+        {
+            "cheese_id": 1,
+            "name": "Camembert",
+            "price_per_kg": 15.5,
+            "origin": "Normandie",
+            "product_id": 1
+        },
+        {
+            "cheese_id": 2,
+            "name": "Brie",
+            "price_per_kg": 12.8,
+            "origin": "Ile-de-France",
+            "product_id": 2
+        }
+    ],
+    "order_wine": [
+        {
+            "wine_id": 1,
+            "name": "Pinot Noir",
+            "price_per_bottle": 25.75,
+            "origin": "Bourgogne",
+            "product_id": 3
+        }
+    ],
+    "order_orderdetail": [
+        {
+            "orderdetail_id": 1,
+            "order_id": 1,
+            "product_id": 1,
+            "quantity": 2
+        },
+        {
+            "orderdetail_id": 2,
+            "order_id": 1,
+            "product_id": 3,
+            "quantity": 1
+        },
+        {
+            "orderdetail_id": 3,
+            "order_id": 2,
+            "product_id": 2,
+            "quantity": 3
+        }
+    ],
+    "order_warehouse": [
+        {
+            "warehouse_id": 1,
+            "address": "123 Rue du Fromage",
+            "postal_code": "75001",
+            "zone": "North"
+        },
+        {
+            "warehouse_id": 2,
+            "address": "456 Avenue du Vin",
+            "postal_code": "75002",
+            "zone": "South"
+        }
+    ]
+}

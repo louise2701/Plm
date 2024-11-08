@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Catalogue de Produits</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: #A0522D; /* Dark wine color for text */
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.8); /* Light background with transparency */
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #FFD700; /* Gold border for distinction */
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+
+        section {
+            padding: 2em;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for section background */
+            margin: 20px; /* Margin for spacing */
+            border-radius: 10px; /* Rounded corners */
+            max-width: 1200px; /* Limit max width */
+            margin: auto; /* Center section */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse; /* Combine borders */
+            margin-top: 20px; /* Spacing above the table */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Light grey border for table rows */
+        }
+
+        th {
+            background-color: #FFD700; /* Gold background for table header */
+            color: #A0522D; /* Dark wine color for header text */
+        }
+
+        tr:hover {
+            background-color: rgba(255, 215, 0, 0.2); /* Highlight row on hover */
+        }
+
+        footer {
+            background-color: rgba(255, 255, 255, 0.8); /* Light footer background */
+            text-align: center;
+            padding: 20px;
+            border-top: 5px solid #FFD700; /* Gold border for footer */
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Catalogue de Produits</h1>
+    </header>
+
+    <section>
+        <h2>Ajouter un Nouveau Produit</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="text" name="product_id" placeholder="ID du Produit" required>
+            <input type="text" name="reference" placeholder="Référence" required>
+            <input type="text" name="name" placeholder="Nom du Produit" required>
+            <input type="text" name="ingredients" placeholder="Ingrédients (séparés par des virgules)" required>
+            <input type="text" name="manufacturing_process" placeholder="Processus de fabrication" required>
+            <input type="text" name="weight" placeholder="Poids" required>
+            <input type="text" name="ripening_duration" placeholder="Durée d'affinage" required>
+            <input type="text" name="cheese_type" placeholder="Type de fromage" required>
+            <input type="hidden" name="action" value="add">
+            <button type="submit">Ajouter Produit</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Référence</th>
+                    <th>Ingrédients</th>
+                    <th>Processus de fabrication</th>
+                    <th>Poids</th>
+                    <th>Durée d'affinage</th>
+                    <th>Type de fromage</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.product_id }}</td>
+                        <td>{{ product.nom }}</td>
+                        <td>{{ product.reference }}</td>
+                        <td>{{ product.ingredients|join:", " }}</td>
+                        <td>{{ product.processus_de_fabrication }}</td>
+                        <td>{{ product.specifications.poids }}</td>
+                        <td>{{ product.specifications.durée_d_affinage }}</td>
+                        <td>{{ product.specifications.type_de_fromage }}</td>
+                        <td>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                                <input type="text" name="reference" value="{{ product.reference }}" required>
+                                <input type="text" name="name" value="{{ product.nom }}" required>
+                                <input type="text" name="ingredients" value="{{ product.ingredients|join:', ' }}" required>
+                                <input type="text" name="manufacturing_process" value="{{ product.processus_de_fabrication }}" required>
+                                <input type="text" name="weight" value="{{ product.specifications.poids }}" required>
+                                <input type="text" name="ripening_duration" value="{{ product.specifications.durée_d_affinage }}" required>
+                                <input type="text" name="cheese_type" value="{{ product.specifications.type_de_fromage }}" required>
+                                <input type="hidden" name="action" value="edit">
+                                <button type="submit">Modifier</button>
+                            </form>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                                <input type="hidden" name="action" value="delete">
+                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">Supprimer</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
+
+</html>

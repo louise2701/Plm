@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion du Planning</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: #A0522D;
+        }
+
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-bottom: 5px solid #A0522D;
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            color: #FFD700;
+        }
+
+        section {
+            margin: 0 auto;
+            padding: 20px;
+            width: 80%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #FFD700;
+            color: #A0522D;
+        }
+
+        tr:hover {
+            background-color: rgba(255, 215, 0, 0.2);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            margin: 20px 0;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        select,
+        button {
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #A0522D;
+            color: white;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #FFD700;
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            margin: 20px 0;
+        }
+
+        .add-planning {
+            margin: 20px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Gestion du Planning</h1>
+    </header>
+
+    <section>
+        <div class="add-planning">
+            <h2>Ajouter un Planning</h2>
+            <form method="post">
+                {% csrf_token %}
+                <input type="date" name="date" placeholder="Date" required>
+                <select name="shift" required>
+                    <option value="Matin">Matin</option>
+                    <option value="Après-midi">Après-midi</option>
+                    <option value="Nuit">Nuit</option>
+                </select>
+                <label>Employés Assignés:</label>
+                <select name="employes_assignes" required>
+                    {% for employe in employes %}
+                        <option value="{{ employe.id }}">{{ employe.nom }}</option>
+                    {% endfor %}
+                </select>
+                <label>Produits Préparés:</label>
+                <select name="produits_prepares" required>
+                    {% for produit in produits %}
+                        <option value="{{ produit.id }}">{{ produit.nom }}</option>
+                    {% endfor %}
+                </select>
+                <textarea name="commentaires" placeholder="Commentaires" required></textarea>
+                <button type="submit" name="action" value="add">Ajouter</button>
+            </form>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Shift</th>
+                    <th>Employés Assignés</th>
+                    <th>Produits Préparés</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for planning in plannings %}
+                <tr>
+                    <td>{{ planning.planning_id }}</td>
+                    <td>{{ planning.date }}</td>
+                    <td>{{ planning.shift }}</td>
+                    <td>{{ planning.employes_assignes.nom }}</td>
+                    <td>{{ planning.produits_prepares.nom }}</td>
+                    <td>
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="planning_id" value="{{ planning.planning_id }}">
+                            <button type="submit" name="action" value="delete">Supprimer</button>
+                        </form>
+                        <button onclick="document.getElementById('update-{{ planning.planning_id }}').style.display='block'">Modifier</button>
+                        <div id="update-{{ planning.planning_id }}" style="display:none;">
+                            <form method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="planning_id" value="{{ planning.planning_id }}">
+                                <input type="date" name="date" value="{{ planning.date }}" required>
+                                <select name="shift" required>
+                                    <option value="Matin" {% if planning.shift == 'Matin' %}selected{% endif %}>Matin</option>
+                                    <option value="Après-midi" {% if planning.shift == 'Après-midi' %}selected{% endif %}>Après-midi</option>
+                                    <option value="Nuit" {% if planning.shift == 'Nuit' %}selected{% endif %}>Nuit</option>
+                                </select>
+                                <label>Employés Assignés:</label>
+                                <select name="employes_assignes" required>
+                                    {% for employe in employes %}
+                                        <option value="{{ employe.id }}" {% if employe.id == planning.employes_assignes.id %}selected{% endif %}>{{ employe.nom }}</option>
+                                    {% endfor %}
+                                </select>
+                                <label>Produits Préparés:</label>
+                                <select name="produits_prepares" required>
+                                    {% for produit in produits %}
+                                        <option value="{{ produit.id }}" {% if produit.id == planning.produits_prepares.id %}selected{% endif %}>{{ produit.nom }}</option>
+                                    {% endfor %}
+                                </select>
+                                <textarea name="commentaires" required>{{ planning.commentaires }}</textarea>
+                                <button type="submit" name="action" value="update">Mettre à jour</button>
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+</body>
+</html>

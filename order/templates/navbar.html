@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/navbar_footer.css' %}">
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .navbar {
+            display: flex;
+            align-items: center; /* Aligne le logo et les liens verticalement */
+            background-color: #e5e5e5; /* Light background to complement the logo */
+            padding: 15px 20px; /* Padding pour la barre de navigation */
+            width: 100%; /* S'assurer qu'elle prend toute la largeur */
+        }
+
+        .logo {
+            height: 60px; /* Ajustez la taille si nécessaire */
+            margin-right: 20px; /* Espace entre le logo et les liens */
+        }
+
+        .nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-wrap: wrap; /* Permet aux liens de passer à la ligne */
+            gap: 20px; /* Espace entre les éléments */
+            margin-left: auto; /* Pousse les liens vers la droite */
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: #A0522D; /* Une couleur inspirée du vin */
+            font-weight: bold;
+            padding: 10px 15px; /* Plus de padding pour une zone de clic plus grande */
+            transition: background-color 0.3s, color 0.3s;
+            border-radius: 5px; /* Coins arrondis pour les liens */
+        }
+
+        .nav-link:hover {
+            background-color: #FFD700; /* Effet de survol doré */
+            color: #fff; /* Texte blanc au survol */
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar">
+        <img src="{% static 'logo4.jpg' %}" alt="Logo" class="logo">
+        <ul class="nav">
+            <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
+            <li><a href="{% url 'produces' %}" class="nav-link">Order Now</a></li>
+            <li><a href="{% url 'employees' %}" class="nav-link">Employees</a></li>
+            <li><a href="{% url 'stock_management' %}" class="nav-link">Manage Stock</a></li>
+            <li><a href="{% url 'catalog_management' %}" class="nav-link">Product Catalog</a></li>
+            <li><a href="{% url 'client_management' %}" class="nav-link">Client Management</a></li>
+            <li><a href="{% url 'order_management' %}" class="nav-link">Gestion des Commandes</a></li>
+            <li><a href="{% url 'warehouse_management' %}" class="nav-link">Gestion des Entrepôts</a></li>
+            <li><a href="{% url 'fournisseurs' %}" class="nav-link">Fournisseurs</a></li>
+            <li><a href="{% url 'sous_traitants' %}" class="nav-link">Sous Traitants</a></li>
+            <li><a href="{% url 'planning' %}" class="nav-link">Planning</a></li>
+            <li><a href="{% url 'production' %}" class="nav-link">Production</a></li>
+
+            {% if user_email %}
+                <li><a href="{% url 'account' %}" class="nav-link">Account</a></li>
+                <li><a href="{% url 'logout' %}" class="nav-link">Log Out</a></li>
+            {% else %}
+                <li><a href="{% url 'login' %}" class="nav-link">Log In</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+</body>
+
+</html>

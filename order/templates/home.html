@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed; /* Background image */
+            background-size: cover; /* Cover the entire screen */
+            color: #A0522D; /* Dark wine color for text */
+        }
+
+        header {
+            background-color: rgba(255, 255, 255, 0.8); /* Light background with transparency */
+            padding: 20px;
+            text-align: center;
+            border-bottom: 5px solid #FFD700; /* Gold border for distinction */
+        }
+
+        section {
+            padding: 2em;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for section background */
+            margin: 20px; /* Margin for spacing */
+            border-radius: 10px; /* Rounded corners */
+        }
+
+        .welcome {
+            font-size: 1.2em;
+            line-height: 1.5;
+            margin: 10px 0; /* Added margin for spacing */
+        }
+
+        .submit-button {
+            background-color: #FFD700; /* Gold background for button */
+            color: #A0522D; /* Dark wine color for button text */
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover */
+        }
+
+        .submit-button:hover {
+            background-color: #A0522D; /* Change background on hover */
+            color: #FFD700; /* Change text color on hover */
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+    
+    <header>
+        <h1>MGO S.A.: Fresh Cheese and Wine at Your Fingertips</h1>
+        <p>Your source for the finest cheeses and wines.</p>
+    </header>
+
+    <section>
+        <p class="welcome">Welcome to MGO S.A., your premier destination for exquisite cheeses and premium wines. Our commitment is to provide you with high-quality, delicious products that you can conveniently order online.</p>
+        <p class="welcome">Explore our carefully curated selection and indulge in the rich flavors of our artisan cheeses and fine wines today!</p>
+        <button class="submit-button" id="order_button">Order Now</button>
+    </section>
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+
+    <script>
+        var orderButton = document.getElementById('order_button');
+        orderButton.addEventListener('click', function() {
+            window.location.href = '/order/produces/';
+        });
+    </script>
+</body>
+
+</html>

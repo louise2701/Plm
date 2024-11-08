@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion des Commandes</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'styles/main.css' %}">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: #A0522D; /* Dark wine color for text */
+        }
+
+        h1 {
+            text-align: center;
+            padding: 20px;
+            color: #FFD700; /* Gold color for the header */
+            background-color: rgba(255, 255, 255, 0.8); /* Light background with transparency */
+            border-bottom: 5px solid #A0522D; /* Dark wine border */
+            margin: 0;
+        }
+
+        table {
+            width: 80%; /* Set table width */
+            margin: 20px auto; /* Center the table */
+            border-collapse: collapse; /* Combine borders */
+            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd; /* Light grey border */
+        }
+
+        th {
+            background-color: #FFD700; /* Gold background for header */
+            color: #A0522D; /* Dark wine color for header text */
+        }
+
+        tr:hover {
+            background-color: rgba(255, 215, 0, 0.2); /* Highlight row on hover */
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px; /* Space between elements */
+        }
+
+        select {
+            padding: 5px;
+            border-radius: 5px; /* Rounded corners for inputs */
+            border: 1px solid #ddd; /* Light border */
+        }
+
+        button {
+            padding: 5px 10px;
+            background-color: #A0522D; /* Dark wine color */
+            color: white; /* White text */
+            border: none; /* Remove border */
+            border-radius: 5px; /* Rounded corners */
+            cursor: pointer; /* Pointer cursor on hover */
+            transition: background-color 0.3s; /* Smooth transition */
+        }
+
+        button:hover {
+            background-color: #FFD700; /* Change color on hover */
+        }
+
+        .message {
+            text-align: center;
+            color: green;
+            margin: 20px;
+        }
+
+        .details {
+            display: none; /* Hide details by default */
+            margin: 10px 0;
+        }
+    </style>
+</head>
+
+<body>
+    {% include 'navbar.html' %}
+
+    <header>
+        <h1>Gestion des Commandes</h1>
+    </header>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Date de Commande</th>
+                <th>Date de Livraison</th>
+                <th>Adresse de Livraison</th>
+                <th>Statut</th>
+                <th>Détails</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+            <tr>
+                <td>{{ order.order_id }}</td>
+                <td>{{ order.order_date }}</td>
+                <td>{{ order.delivery_date }}</td>
+                <td>{{ order.delivery_address }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    <button onclick="document.getElementById('details-{{ order.order_id }}').style.display='block'">Voir Détails</button>
+                    <div id="details-{{ order.order_id }}" class="details">
+                        <h3>Détails de la Commande ID {{ order.order_id }}</h3>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Nom du Produit</th>
+                                    <th>Quantité</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for product in order.products %}
+                                <tr>
+                                    <td>{{ product.name }}</td>
+                                    <td>{{ product.quantity }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </td>
+                <td>
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                        <select name="status">
+                            <option value="Pending" {% if order.status == "Pending" %}selected{% endif %}>Pending</option>
+                            <option value="Shipped" {% if order.status == "Shipped" %}selected{% endif %}>Shipped</option>
+                            <option value="Delivered" {% if order.status == "Delivered" %}selected{% endif %}>Delivered</option>
+                        </select>
+                        <button type="submit">Modifier</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% if messages %}
+        <div class="message">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <footer>
+        {% include 'footer.html' %}
+    </footer>
+</body>
+</html>
