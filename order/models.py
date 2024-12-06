@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import UniqueConstraint
 
 
 # Modèle pour les clients
@@ -142,13 +143,16 @@ class Planning(models.Model):
         return f'Planning {self.planning_id} - {self.date}'
 
 
+
 class ProduitPreparation(models.Model):
-    planning = models.ForeignKey(Planning, on_delete=models.CASCADE)
-    produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    planning = models.ForeignKey('Planning', on_delete=models.CASCADE)
+    produit = models.ForeignKey('Produit', on_delete=models.CASCADE)
     quantite = models.PositiveIntegerField()
 
     class Meta:
-        unique_together = ('planning', 'produit')  # Assure qu'un produit ne peut être préparé qu'une fois par planning
+        constraints = [
+            UniqueConstraint(fields=['planning', 'produit'], name='unique_planning_produit')
+        ]  # Ensures that a product can only be prepared once per planning
 
     def __str__(self):
         return f'{self.quantite} of {self.produit} for Planning {self.planning}'
