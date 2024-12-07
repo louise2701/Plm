@@ -1,18 +1,24 @@
-import MySQLdb
+import sqlite3
 
-def create_database(db_name, db_user, db_password, db_host='localhost'):
+def create_database(db_name):
     try:
-        db = MySQLdb.connect(host=db_host, user=db_user, passwd=db_password)
-        cursor = db.cursor()
-        cursor.execute(f"CREATE DATABASE IF NOT EXISTS {db_name};")
-        print(f"Database '{db_name}' created or already exists.")
-        db.close()
-    except MySQLdb.Error as e:
-        print(f"Error connecting to MySQL: {e}")
+        # Connect to SQLite (creates the file if it doesn't exist)
+        conn = sqlite3.connect(f"{db_name}.db")
+        cursor = conn.cursor()
 
-# parameters
-db_user = 'root'
-db_password = 'root'
+        # Example: Create a table to ensure the database is usable
+        cursor.execute("CREATE TABLE IF NOT EXISTS example_table (id INTEGER PRIMARY KEY, name TEXT);")
+        
+        print(f"Database '{db_name}.db' created or already exists.")
+        
+        # Commit and close the connection
+        conn.commit()
+        conn.close()
+    except sqlite3.Error as e:
+        print(f"Error connecting to SQLite: {e}")
+
+# Parameters
 db_name = 'plm_mgo'
 
-create_database(db_name, db_user, db_password)
+# Create the database
+create_database(db_name)
