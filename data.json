@@ -26,9 +26,89 @@
             "first_name": "Jane",
             "last_name": "Smith",
             "phone_number": "9876543210",
-            "address": "456 Avenue des \u00c3\u2030toiles",
+            "address": "456 Avenue des \u00c9toiles",
             "postal_code": "75002",
             "registered_credit_card": "1234567891234567"
+        },
+        {
+            "email": "orders@walmart.com",
+            "password": "securePass1",
+            "first_name": "Walmart",
+            "last_name": "Corp",
+            "phone_number": "8009256278",
+            "address": "702 SW 8th St",
+            "postal_code": "72716",
+            "registered_credit_card": "4321123456781234"
+        },
+        {
+            "email": "purchase@carrefour.com",
+            "password": "securePass2",
+            "first_name": "Carrefour",
+            "last_name": "Group",
+            "phone_number": "0141042600",
+            "address": "33 avenue \u00c9mile Zola",
+            "postal_code": "92100",
+            "registered_credit_card": "9876543210987654"
+        },
+        {
+            "email": "contact@tesco.com",
+            "password": "securePass3",
+            "first_name": "Tesco",
+            "last_name": "PLC",
+            "phone_number": "441992632222",
+            "address": "Shire Park, Kestrel Way",
+            "postal_code": "AL7 1GA",
+            "registered_credit_card": "5647382910457632"
+        },
+        {
+            "email": "info@aldi.com",
+            "password": "securePass4",
+            "first_name": "Aldi",
+            "last_name": "S\u00fcd",
+            "phone_number": "4920185930",
+            "address": "Burgstra\u00dfe 37",
+            "postal_code": "45476",
+            "registered_credit_card": "6758392048572098"
+        },
+        {
+            "email": "support@lidl.com",
+            "password": "securePass5",
+            "first_name": "Lidl",
+            "last_name": "International",
+            "phone_number": "4971329450",
+            "address": "Stiftsbergstra\u00dfe 1",
+            "postal_code": "74167",
+            "registered_credit_card": "2094857603948576"
+        },
+        {
+            "email": "sales@sainsburys.co.uk",
+            "password": "securePass6",
+            "first_name": "Sainsbury's",
+            "last_name": "Supermarkets",
+            "phone_number": "442076956000",
+            "address": "33 Holborn",
+            "postal_code": "EC1N 2HT",
+            "registered_credit_card": "1294857603948572"
+        },
+        {
+            "email": "orders@costco.com",
+            "password": "securePass7",
+            "first_name": "Costco",
+            "last_name": "Wholesale",
+            "phone_number": "8007742678",
+            "address": "999 Lake Drive",
+            "postal_code": "98027",
+            "registered_credit_card": "8374092857634910"
+        },
+        {
+            "email": "contact@target.com",
+            "password": "securePass8",
+            "first_name": "Target",
+            "last_name": "Corporation",
+            "phone_number": "8004400680",
+            "address": "1000 Nicollet Mall",
+            "postal_code": "55403",
+            "registered_credit_card": "4789203847562049"
         }
     ],
     "order_order": [
@@ -36,10 +116,11 @@
             "order_id": 1,
             "order_date": "2023-01-01",
             "delivery_date": "2023-01-03",
-            "delivery_option": "Express",
+            "delivery_option": "Standard",
             "delivery_address": "123 Rue des Fleurs",
             "delivery_postal_code": "75001",
-            "status": "Pending",
+            "status": "In transit",
+            "delivery_mode": "Airplane",
             "total_price": 15.7,
             "credit_card": "1234567891234567",
             "email_id": "john.doe@email.com"
@@ -52,23 +133,471 @@
             "delivery_address": "456 Avenue des \u00c3\u2030toiles",
             "delivery_postal_code": "75002",
             "status": "Delivered",
+            "delivery_mode": "Ship",
             "total_price": 20.0,
             "credit_card": "1234567891234567",
             "email_id": "jane.smith@email.com"
+        },
+        {
+            "order_id": 3,
+            "order_date": "2023-01-10",
+            "delivery_date": "2023-01-12",
+            "delivery_option": "Express",
+            "delivery_address": "testAddress",
+            "delivery_postal_code": "12345",
+            "status": "Pending",
+            "delivery_mode": "Airplane",
+            "total_price": 51.5,
+            "credit_card": "1234567891234567",
+            "email_id": "test@test.com"
+        },
+        {
+            "order_id": 4,
+            "order_date": "2023-01-13",
+            "delivery_date": "2023-01-15",
+            "delivery_option": "Standard",
+            "delivery_address": "testAddress",
+            "delivery_postal_code": "12345",
+            "status": "Delivered",
+            "delivery_mode": "Truck",
+            "total_price": 57.0,
+            "credit_card": "1234567891234567",
+            "email_id": "test@test.com"
+        },
+        {
+            "order_id": 5,
+            "order_date": "2023-01-16",
+            "delivery_date": "2023-01-18",
+            "delivery_option": "Express",
+            "delivery_address": "testAddress",
+            "delivery_postal_code": "12345",
+            "status": "Delivered",
+            "delivery_mode": "Truck",
+            "total_price": 62.5,
+            "credit_card": "1234567891234567",
+            "email_id": "test@test.com"
+        },
+        {
+            "order_id": 6,
+            "order_date": "2023-01-19",
+            "delivery_date": "2023-01-21",
+            "delivery_option": "Express",
+            "delivery_address": "123 Rue des Fleurs",
+            "delivery_postal_code": "75001",
+            "status": "Pending",
+            "delivery_mode": "Ship",
+            "total_price": 53.0,
+            "credit_card": "1234567891234567",
+            "email_id": "john.doe@email.com"
+        },
+        {
+            "order_id": 7,
+            "order_date": "2023-01-22",
+            "delivery_date": "2023-01-24",
+            "delivery_option": "Standard",
+            "delivery_address": "123 Rue des Fleurs",
+            "delivery_postal_code": "75001",
+            "status": "Delivered",
+            "delivery_mode": "Airplane",
+            "total_price": 58.5,
+            "credit_card": "1234567891234567",
+            "email_id": "john.doe@email.com"
+        },
+        {
+            "order_id": 8,
+            "order_date": "2023-01-25",
+            "delivery_date": "2023-01-27",
+            "delivery_option": "Express",
+            "delivery_address": "123 Rue des Fleurs",
+            "delivery_postal_code": "75001",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 64.0,
+            "credit_card": "1234567891234567",
+            "email_id": "john.doe@email.com"
+        },
+        {
+            "order_id": 9,
+            "order_date": "2023-01-28",
+            "delivery_date": "2023-01-30",
+            "delivery_option": "Express",
+            "delivery_address": "456 Avenue des \u00c9toiles",
+            "delivery_postal_code": "75002",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 54.5,
+            "credit_card": "1234567891234567",
+            "email_id": "jane.smith@email.com"
+        },
+        {
+            "order_id": 10,
+            "order_date": "2023-01-31",
+            "delivery_date": "2023-02-02",
+            "delivery_option": "Standard",
+            "delivery_address": "456 Avenue des \u00c9toiles",
+            "delivery_postal_code": "75002",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 60.0,
+            "credit_card": "1234567891234567",
+            "email_id": "jane.smith@email.com"
+        },
+        {
+            "order_id": 11,
+            "order_date": "2023-02-03",
+            "delivery_date": "2023-02-05",
+            "delivery_option": "Express",
+            "delivery_address": "456 Avenue des \u00c9toiles",
+            "delivery_postal_code": "75002",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 65.5,
+            "credit_card": "1234567891234567",
+            "email_id": "jane.smith@email.com"
+        },
+        {
+            "order_id": 12,
+            "order_date": "2023-02-06",
+            "delivery_date": "2023-02-08",
+            "delivery_option": "Express",
+            "delivery_address": "702 SW 8th St",
+            "delivery_postal_code": "72716",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 56.0,
+            "credit_card": "4321123456781234",
+            "email_id": "orders@walmart.com"
+        },
+        {
+            "order_id": 13,
+            "order_date": "2023-02-09",
+            "delivery_date": "2023-02-11",
+            "delivery_option": "Standard",
+            "delivery_address": "702 SW 8th St",
+            "delivery_postal_code": "72716",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 61.5,
+            "credit_card": "4321123456781234",
+            "email_id": "orders@walmart.com"
+        },
+        {
+            "order_id": 14,
+            "order_date": "2023-02-12",
+            "delivery_date": "2023-02-14",
+            "delivery_option": "Express",
+            "delivery_address": "702 SW 8th St",
+            "delivery_postal_code": "72716",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 67.0,
+            "credit_card": "4321123456781234",
+            "email_id": "orders@walmart.com"
+        },
+        {
+            "order_id": 15,
+            "order_date": "2023-02-15",
+            "delivery_date": "2023-02-17",
+            "delivery_option": "Express",
+            "delivery_address": "33 avenue \u00c9mile Zola",
+            "delivery_postal_code": "92100",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 57.5,
+            "credit_card": "9876543210987654",
+            "email_id": "purchase@carrefour.com"
+        },
+        {
+            "order_id": 16,
+            "order_date": "2023-02-18",
+            "delivery_date": "2023-02-20",
+            "delivery_option": "Standard",
+            "delivery_address": "33 avenue \u00c9mile Zola",
+            "delivery_postal_code": "92100",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 63.0,
+            "credit_card": "9876543210987654",
+            "email_id": "purchase@carrefour.com"
+        },
+        {
+            "order_id": 17,
+            "order_date": "2023-02-21",
+            "delivery_date": "2023-02-23",
+            "delivery_option": "Express",
+            "delivery_address": "33 avenue \u00c9mile Zola",
+            "delivery_postal_code": "92100",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 68.5,
+            "credit_card": "9876543210987654",
+            "email_id": "purchase@carrefour.com"
+        },
+        {
+            "order_id": 18,
+            "order_date": "2023-02-24",
+            "delivery_date": "2023-02-26",
+            "delivery_option": "Express",
+            "delivery_address": "Shire Park, Kestrel Way",
+            "delivery_postal_code": "AL7 1GA",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 59.0,
+            "credit_card": "5647382910457632",
+            "email_id": "contact@tesco.com"
+        },
+        {
+            "order_id": 19,
+            "order_date": "2023-02-27",
+            "delivery_date": "2023-03-01",
+            "delivery_option": "Standard",
+            "delivery_address": "Shire Park, Kestrel Way",
+            "delivery_postal_code": "AL7 1GA",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 64.5,
+            "credit_card": "5647382910457632",
+            "email_id": "contact@tesco.com"
+        },
+        {
+            "order_id": 20,
+            "order_date": "2023-03-02",
+            "delivery_date": "2023-03-04",
+            "delivery_option": "Express",
+            "delivery_address": "Shire Park, Kestrel Way",
+            "delivery_postal_code": "AL7 1GA",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 70.0,
+            "credit_card": "5647382910457632",
+            "email_id": "contact@tesco.com"
+        },
+        {
+            "order_id": 21,
+            "order_date": "2023-03-05",
+            "delivery_date": "2023-03-07",
+            "delivery_option": "Express",
+            "delivery_address": "Burgstra\u00dfe 37",
+            "delivery_postal_code": "45476",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 60.5,
+            "credit_card": "6758392048572098",
+            "email_id": "info@aldi.com"
+        },
+        {
+            "order_id": 22,
+            "order_date": "2023-03-08",
+            "delivery_date": "2023-03-10",
+            "delivery_option": "Standard",
+            "delivery_address": "Burgstra\u00dfe 37",
+            "delivery_postal_code": "45476",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 66.0,
+            "credit_card": "6758392048572098",
+            "email_id": "info@aldi.com"
+        },
+        {
+            "order_id": 23,
+            "order_date": "2023-03-11",
+            "delivery_date": "2023-03-13",
+            "delivery_option": "Express",
+            "delivery_address": "Burgstra\u00dfe 37",
+            "delivery_postal_code": "45476",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 71.5,
+            "credit_card": "6758392048572098",
+            "email_id": "info@aldi.com"
+        },
+        {
+            "order_id": 24,
+            "order_date": "2023-03-14",
+            "delivery_date": "2023-03-16",
+            "delivery_option": "Express",
+            "delivery_address": "Stiftsbergstra\u00dfe 1",
+            "delivery_postal_code": "74167",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 62.0,
+            "credit_card": "2094857603948576",
+            "email_id": "support@lidl.com"
+        },
+        {
+            "order_id": 25,
+            "order_date": "2023-03-17",
+            "delivery_date": "2023-03-19",
+            "delivery_option": "Standard",
+            "delivery_address": "Stiftsbergstra\u00dfe 1",
+            "delivery_postal_code": "74167",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 67.5,
+            "credit_card": "2094857603948576",
+            "email_id": "support@lidl.com"
+        },
+        {
+            "order_id": 26,
+            "order_date": "2023-03-20",
+            "delivery_date": "2023-03-22",
+            "delivery_option": "Express",
+            "delivery_address": "Stiftsbergstra\u00dfe 1",
+            "delivery_postal_code": "74167",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 73.0,
+            "credit_card": "2094857603948576",
+            "email_id": "support@lidl.com"
+        },
+        {
+            "order_id": 27,
+            "order_date": "2023-03-23",
+            "delivery_date": "2023-03-25",
+            "delivery_option": "Express",
+            "delivery_address": "33 Holborn",
+            "delivery_postal_code": "EC1N 2HT",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 63.5,
+            "credit_card": "1294857603948572",
+            "email_id": "sales@sainsburys.co.uk"
+        },
+        {
+            "order_id": 28,
+            "order_date": "2023-03-26",
+            "delivery_date": "2023-03-28",
+            "delivery_option": "Standard",
+            "delivery_address": "33 Holborn",
+            "delivery_postal_code": "EC1N 2HT",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 69.0,
+            "credit_card": "1294857603948572",
+            "email_id": "sales@sainsburys.co.uk"
+        },
+        {
+            "order_id": 29,
+            "order_date": "2023-03-29",
+            "delivery_date": "2023-03-31",
+            "delivery_option": "Express",
+            "delivery_address": "33 Holborn",
+            "delivery_postal_code": "EC1N 2HT",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 74.5,
+            "credit_card": "1294857603948572",
+            "email_id": "sales@sainsburys.co.uk"
+        },
+        {
+            "order_id": 30,
+            "order_date": "2023-04-01",
+            "delivery_date": "2023-04-03",
+            "delivery_option": "Express",
+            "delivery_address": "999 Lake Drive",
+            "delivery_postal_code": "98027",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 65.0,
+            "credit_card": "8374092857634910",
+            "email_id": "orders@costco.com"
+        },
+        {
+            "order_id": 31,
+            "order_date": "2023-04-04",
+            "delivery_date": "2023-04-06",
+            "delivery_option": "Standard",
+            "delivery_address": "999 Lake Drive",
+            "delivery_postal_code": "98027",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 70.5,
+            "credit_card": "8374092857634910",
+            "email_id": "orders@costco.com"
+        },
+        {
+            "order_id": 32,
+            "order_date": "2023-04-07",
+            "delivery_date": "2023-04-09",
+            "delivery_option": "Express",
+            "delivery_address": "999 Lake Drive",
+            "delivery_postal_code": "98027",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 76.0,
+            "credit_card": "8374092857634910",
+            "email_id": "orders@costco.com"
+        },
+        {
+            "order_id": 33,
+            "order_date": "2023-04-10",
+            "delivery_date": "2023-04-12",
+            "delivery_option": "Express",
+            "delivery_address": "1000 Nicollet Mall",
+            "delivery_postal_code": "55403",
+            "status": "Pending",
+            "delivery_mode": "Train",
+            "total_price": 66.5,
+            "credit_card": "4789203847562049",
+            "email_id": "contact@target.com"
+        },
+        {
+            "order_id": 34,
+            "order_date": "2023-04-13",
+            "delivery_date": "2023-04-15",
+            "delivery_option": "Standard",
+            "delivery_address": "1000 Nicollet Mall",
+            "delivery_postal_code": "55403",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 72.0,
+            "credit_card": "4789203847562049",
+            "email_id": "contact@target.com"
+        },
+        {
+            "order_id": 35,
+            "order_date": "2023-04-16",
+            "delivery_date": "2023-04-18",
+            "delivery_option": "Express",
+            "delivery_address": "1000 Nicollet Mall",
+            "delivery_postal_code": "55403",
+            "status": "Delivered",
+            "delivery_mode": "Train",
+            "total_price": 77.5,
+            "credit_card": "4789203847562049",
+            "email_id": "contact@target.com"
         }
     ],
     "order_product": [
         {
-            "product_id": 1,
-            "stock": 100
+            "product_id": 1
         },
         {
-            "product_id": 2,
-            "stock": 50
+            "product_id": 2
         },
         {
-            "product_id": 3,
-            "stock": 75
+            "product_id": 3
+        },
+        {
+            "product_id": 4
+        },
+        {
+            "product_id": 5
+        },
+        {
+            "product_id": 6
+        },
+        {
+            "product_id": 7
+        },
+        {
+            "product_id": 8
+        },
+        {
+            "product_id": 9
+        },
+        {
+            "product_id": 10
         }
     ],
     "order_fiche_produit": [
@@ -141,24 +670,142 @@
         },
         {
             "product_id": 4,
-            "reference": "VIN_001",
-            "nom": "AOP",
+            "reference": "CAM_004",
+            "nom": "Emmental",
             "ingredients": [
-                "raisins rouge bio",
-                "Sucre",
-                "bois de ch\u00c3\u00aane",
-                "\u00c3\u00a9pluchure de citron"
+                "Lait de vache",
+                "Sel",
+                "Pr\u00c3\u00a9sure"
             ],
-            "processus_de_fabrication": "R\u00c3\u00a9colte des vendenges, pi\u00c3\u00a9tinage des raisons fraichement r\u00c3\u00a9colt\u00c3\u00a9, affinage en fut de ch\u00c3\u00aane.",
+            "processus_de_fabrication": "Lait chauff\u00c3\u00a9, additionn\u00c3\u00a9 de ferments, caillage, moulage, affinage.",
             "specifications": {
-                "poids": "450g",
-                "dur\u00c3\u00a9e_d_affinage": "7 mois",
-                "type_de_vin": "Ros\u00c3\u00a9"
+                "poids": "1kg",
+                "dur\u00c3\u00a9e_d_affinage": "8 semaines",
+                "type_de_fromage": "P\u00c3\u00a2te press\u00c3\u00a9e cuite"
             },
             "version": {
                 "numero_version": 1,
-                "date_modification": "2023-03-05",
-                "modifications": "Recette bio."
+                "date_modification": "2023-04-01",
+                "modifications": "Recette initiale."
+            }
+        },
+        {
+            "product_id": 5,
+            "reference": "CAM_005",
+            "nom": "Comt\u00c3\u00a9",
+            "ingredients": [
+                "Lait cru de vache",
+                "Sel",
+                "Pr\u00c3\u00a9sure"
+            ],
+            "processus_de_fabrication": "Lait cru chauff\u00c3\u00a9, caillage, moulage, affinage prolong\u00c3\u00a9.",
+            "specifications": {
+                "poids": "400g",
+                "dur\u00c3\u00a9e_d_affinage": "12 mois",
+                "type_de_fromage": "P\u00c3\u00a2te press\u00c3\u00a9e cuite"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-05-15",
+                "modifications": "Recette initiale."
+            }
+        },
+        {
+            "product_id": 6,
+            "reference": "CAM_006",
+            "nom": "Mozzarella",
+            "ingredients": [
+                "Lait de bufflonne",
+                "Sel",
+                "Pr\u00c3\u00a9sure"
+            ],
+            "processus_de_fabrication": "Lait chauff\u00c3\u00a9, caillage, \u00c3\u00a9tirage de la p\u00c3\u00a2te, moulage.",
+            "specifications": {
+                "poids": "200g",
+                "type_de_fromage": "P\u00c3\u00a2te fil\u00c3\u00a9e"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-06-10",
+                "modifications": "Recette initiale."
+            }
+        },
+        {
+            "product_id": 7,
+            "reference": "VIN_002",
+            "nom": "Merlot",
+            "ingredients": [
+                "Raisins rouges",
+                "Sulfites"
+            ],
+            "processus_de_fabrication": "Fermentation, vieillissement en f\u00c3\u00bbts de ch\u00c3\u00aane.",
+            "specifications": {
+                "volume": "750ml",
+                "taux_d_alcool": "14%"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-07-01",
+                "modifications": "Recette initiale."
+            }
+        },
+        {
+            "product_id": 8,
+            "reference": "VIN_003",
+            "nom": "Chardonnay",
+            "ingredients": [
+                "Raisins blancs",
+                "Sulfites"
+            ],
+            "processus_de_fabrication": "Fermentation, vieillissement en f\u00c3\u00bbts de ch\u00c3\u00aane.",
+            "specifications": {
+                "volume": "750ml",
+                "taux_d_alcool": "13%"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-08-01",
+                "modifications": "Recette initiale."
+            }
+        },
+        {
+            "product_id": 9,
+            "reference": "VIN_004",
+            "nom": "Champagne",
+            "ingredients": [
+                "Raisins Chardonnay",
+                "Levures",
+                "Sulfites"
+            ],
+            "processus_de_fabrication": "Double fermentation, vieillissement sur lies.",
+            "specifications": {
+                "volume": "750ml",
+                "taux_d_alcool": "12%"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-09-15",
+                "modifications": "Recette initiale."
+            }
+        },
+        {
+            "product_id": 10,
+            "reference": "VIN_005",
+            "nom": "Cider",
+            "ingredients": [
+                "Pommes",
+                "Levures",
+                "Sulfites"
+            ],
+            "processus_de_fabrication": "Fermentation, maturation.",
+            "specifications": {
+                "volume": "750ml",
+                "taux_d_alcool": "5%"
+            },
+            "version": {
+                "numero_version": 1,
+                "date_modification": "2023-10-01",
+                "modifications": "Recette initiale."
             }
         }
     ],
@@ -177,7 +824,9 @@
                 "code_postal": "75001",
                 "pays": "France"
             },
-            "produits_fournis": 3
+            "materiel_fournit": "Fromages affin\u00c3\u00a9s",
+            "usine_livree": "Usine de Maturation des Fromages",
+            "prix": 1234.56
         },
         {
             "fournisseur_id": 2,
@@ -193,7 +842,9 @@
                 "code_postal": "69001",
                 "pays": "France"
             },
-            "produits_fournis": 1
+            "materiel_fournit": "Lait cru AOP",
+            "usine_livree": "Usine de Transformation Laiti\u00c3\u00a8re",
+            "prix": 567.89
         },
         {
             "fournisseur_id": 3,
@@ -209,7 +860,27 @@
                 "code_postal": "13001",
                 "pays": "France"
             },
-            "produits_fournis": 2
+            "materiel_fournit": "\u00c3\u2030pices pour affinage",
+            "usine_livree": "Usine d'Affinage et Conditionnement",
+            "prix": 789.01
+        },
+        {
+            "fournisseur_id": 4,
+            "nom": "Cave des Vignobles",
+            "contact": {
+                "nom_contact": "Vincent Ch\u00c3\u00aane",
+                "telephone": "+33 1 44 55 66 77",
+                "email": "vincent.chene@cavedesvignobles.fr"
+            },
+            "adresse": {
+                "rue": "90 Route des Vins",
+                "ville": "Bordeaux",
+                "code_postal": "33000",
+                "pays": "France"
+            },
+            "materiel_fournit": "Barriques de ch\u00c3\u00aane",
+            "usine_livree": "Chai de Vieillissement",
+            "prix": 2000.0
         }
     ],
     "order_sous_traitants": [
@@ -252,6 +923,86 @@
                 "Stockage"
             ],
             "produits_traites": 3
+        },
+        {
+            "sous_traitant_id": 3,
+            "nom": "Global Packaging Solutions",
+            "contact": {
+                "nom_contact": "Laura Dubois",
+                "telephone": "+33 1 45 67 89 00",
+                "email": "laura.dubois@gpsolutions.com"
+            },
+            "adresse": {
+                "rue": "45 Avenue des Entreprises",
+                "ville": "Lyon",
+                "code_postal": "69003",
+                "pays": "France"
+            },
+            "services_fournis": [
+                "Conditionnement",
+                "Gestion des d\u00c3\u00a9chets"
+            ],
+            "produits_traites": 2
+        },
+        {
+            "sous_traitant_id": 4,
+            "nom": "European Freight Ltd",
+            "contact": {
+                "nom_contact": "Michael Brown",
+                "telephone": "+44 20 1234 5678",
+                "email": "michael.brown@europeanfreight.co.uk"
+            },
+            "adresse": {
+                "rue": "10 Fleet Street",
+                "ville": "London",
+                "code_postal": "EC4Y 1AA",
+                "pays": "United Kingdom"
+            },
+            "services_fournis": [
+                "Transport international",
+                "Suivi des exp\u00c3\u00a9ditions"
+            ],
+            "produits_traites": 5
+        },
+        {
+            "sous_traitant_id": 5,
+            "nom": "Alpine Dairy Services",
+            "contact": {
+                "nom_contact": "Hans Keller",
+                "telephone": "+41 22 345 67 89",
+                "email": "hans.keller@alpinedairy.ch"
+            },
+            "adresse": {
+                "rue": "25 Alpenstrasse",
+                "ville": "Geneva",
+                "code_postal": "1201",
+                "pays": "Switzerland"
+            },
+            "services_fournis": [
+                "Affinage",
+                "Stockage r\u00c3\u00a9frig\u00c3\u00a9r\u00c3\u00a9"
+            ],
+            "produits_traites": 4
+        },
+        {
+            "sous_traitant_id": 6,
+            "nom": "Mediterranean Logistics",
+            "contact": {
+                "nom_contact": "Giulia Rossi",
+                "telephone": "+39 06 1234 5678",
+                "email": "giulia.rossi@medlogistics.it"
+            },
+            "adresse": {
+                "rue": "Via Roma 12",
+                "ville": "Rome",
+                "code_postal": "00184",
+                "pays": "Italy"
+            },
+            "services_fournis": [
+                "Transport",
+                "Stockage"
+            ],
+            "produits_traites": 6
         }
     ],
     "order_employes": [
@@ -298,6 +1049,94 @@
                 "R&D"
             ],
             "mdp": "123BIZkbsh"
+        },
+        {
+            "employe_id": 3,
+            "nom": "Marie Lef\u00c3\u00a8vre",
+            "poste": "Responsable logistique",
+            "contact": {
+                "telephone": "+33 1 45 67 89 12",
+                "email": "marie.lefevre@fromagerie.fr"
+            },
+            "adresse": {
+                "rue": "23 Rue des Logistiques",
+                "ville": "Paris",
+                "code_postal": "75008",
+                "pays": "France"
+            },
+            "date_embauche": "2018-09-01",
+            "competences": [
+                "Gestion des stocks",
+                "Organisation du transport",
+                "Optimisation logistique"
+            ],
+            "mdp": "LOGist1998"
+        },
+        {
+            "employe_id": 4,
+            "nom": "Hans M\u00c3\u00bcller",
+            "poste": "Chef affineur",
+            "contact": {
+                "telephone": "+41 22 345 67 89",
+                "email": "hans.muller@fromagerie.ch"
+            },
+            "adresse": {
+                "rue": "12 Fromagegasse",
+                "ville": "Geneva",
+                "code_postal": "1203",
+                "pays": "Switzerland"
+            },
+            "date_embauche": "2017-03-15",
+            "competences": [
+                "Affinage de fromages",
+                "Contr\u00c3\u00b4le des conditions d'affinage",
+                "Connaissances en microbiologie"
+            ],
+            "mdp": "AffinaGe2023"
+        },
+        {
+            "employe_id": 5,
+            "nom": "Giulia Rossi",
+            "poste": "Responsable qualit\u00c3\u00a9",
+            "contact": {
+                "telephone": "+39 06 789 1234",
+                "email": "giulia.rossi@fromagerie.it"
+            },
+            "adresse": {
+                "rue": "Via del Formaggio 15",
+                "ville": "Rome",
+                "code_postal": "00186",
+                "pays": "Italy"
+            },
+            "date_embauche": "2021-02-20",
+            "competences": [
+                "Contr\u00c3\u00b4le qualit\u00c3\u00a9",
+                "Normes HACCP",
+                "Am\u00c3\u00a9lioration continue"
+            ],
+            "mdp": "QUAL2021rome"
+        },
+        {
+            "employe_id": 6,
+            "nom": "John Smith",
+            "poste": "Technicien en production",
+            "contact": {
+                "telephone": "+44 20 1234 5678",
+                "email": "john.smith@fromagerie.uk"
+            },
+            "adresse": {
+                "rue": "10 Dairy Lane",
+                "ville": "London",
+                "code_postal": "EC1A 1BB",
+                "pays": "United Kingdom"
+            },
+            "date_embauche": "2019-11-05",
+            "competences": [
+                "Connaissance des \u00c3\u00a9quipements de production",
+                "Maintenance pr\u00c3\u00a9ventive",
+                "Optimisation des processus"
+            ],
+            "mdp": "Tech2023UK"
         }
     ],
     "order_planning": [
@@ -318,17 +1157,17 @@
             "commentaires": "Contr\u00c3\u00b4le qualit\u00c3\u00a9 des produits bio."
         }
     ],
-    "ProduitPreparation":[
-      {
-         "product_id":2,
-         "quantite":100,
-         "planning_id":1
-      },
-      {
-         "product_id":3,
-         "quantite":75,
-         "planning_id":2
-      }
+    "ProduitPreparation": [
+        {
+            "product_id": 2,
+            "quantite": 100,
+            "planning_id": 1
+        },
+        {
+            "product_id": 3,
+            "quantite": 75,
+            "planning_id": 2
+        }
     ],
     "order_production": [
         {
@@ -366,6 +1205,27 @@
             "price_per_kg": 12.8,
             "origin": "Ile-de-France",
             "product_id": 2
+        },
+        {
+            "cheese_id": 3,
+            "name": "Emmental",
+            "price_per_kg": 10.0,
+            "origin": "Suisse",
+            "product_id": 4
+        },
+        {
+            "cheese_id": 4,
+            "name": "Comt\u00e9",
+            "price_per_kg": 18.0,
+            "origin": "Jura",
+            "product_id": 5
+        },
+        {
+            "cheese_id": 5,
+            "name": "Mozzarella",
+            "price_per_kg": 13.0,
+            "origin": "Italie",
+            "product_id": 6
         }
     ],
     "order_wine": [
@@ -375,6 +1235,34 @@
             "price_per_bottle": 25.75,
             "origin": "Bourgogne",
             "product_id": 3
+        },
+        {
+            "wine_id": 2,
+            "name": "Merlot",
+            "price_per_bottle": 20.0,
+            "origin": "Bordeaux",
+            "product_id": 7
+        },
+        {
+            "wine_id": 3,
+            "name": "Chardonnay",
+            "price_per_bottle": 22.5,
+            "origin": "Languedoc",
+            "product_id": 8
+        },
+        {
+            "wine_id": 4,
+            "name": "Champagne",
+            "price_per_bottle": 45.0,
+            "origin": "Champagne",
+            "product_id": 9
+        },
+        {
+            "wine_id": 5,
+            "name": "Cider",
+            "price_per_bottle": 8.5,
+            "origin": "Normandie",
+            "product_id": 10
         }
     ],
     "order_orderdetail": [
@@ -395,6 +1283,96 @@
             "order_id": 2,
             "product_id": 2,
             "quantity": 3
+        },
+        {
+            "orderdetail_id": 4,
+            "order_id": 2,
+            "product_id": 6,
+            "quantity": 5
+        },
+        {
+            "orderdetail_id": 5,
+            "order_id": 3,
+            "product_id": 4,
+            "quantity": 3
+        },
+        {
+            "orderdetail_id": 6,
+            "order_id": 3,
+            "product_id": 5,
+            "quantity": 2
+        },
+        {
+            "orderdetail_id": 7,
+            "order_id": 4,
+            "product_id": 7,
+            "quantity": 6
+        },
+        {
+            "orderdetail_id": 8,
+            "order_id": 4,
+            "product_id": 8,
+            "quantity": 4
+        },
+        {
+            "orderdetail_id": 9,
+            "order_id": 5,
+            "product_id": 9,
+            "quantity": 3
+        },
+        {
+            "orderdetail_id": 10,
+            "order_id": 5,
+            "product_id": 10,
+            "quantity": 7
+        },
+        {
+            "orderdetail_id": 11,
+            "order_id": 6,
+            "product_id": 2,
+            "quantity": 10
+        },
+        {
+            "orderdetail_id": 12,
+            "order_id": 6,
+            "product_id": 1,
+            "quantity": 8
+        },
+        {
+            "orderdetail_id": 13,
+            "order_id": 7,
+            "product_id": 5,
+            "quantity": 4
+        },
+        {
+            "orderdetail_id": 14,
+            "order_id": 7,
+            "product_id": 3,
+            "quantity": 6
+        },
+        {
+            "orderdetail_id": 15,
+            "order_id": 8,
+            "product_id": 8,
+            "quantity": 5
+        },
+        {
+            "orderdetail_id": 16,
+            "order_id": 8,
+            "product_id": 7,
+            "quantity": 3
+        },
+        {
+            "orderdetail_id": 17,
+            "order_id": 9,
+            "product_id": 4,
+            "quantity": 7
+        },
+        {
+            "orderdetail_id": 18,
+            "order_id": 9,
+            "product_id": 9,
+            "quantity": 2
         }
     ],
     "order_warehouse": [
@@ -402,13 +1380,496 @@
             "warehouse_id": 1,
             "address": "123 Rue du Fromage",
             "postal_code": "75001",
-            "zone": "North"
+            "zone": "France - Europe"
         },
         {
             "warehouse_id": 2,
             "address": "456 Avenue du Vin",
             "postal_code": "75002",
-            "zone": "South"
+            "zone": "France - Europe"
+        },
+        {
+            "warehouse_id": 3,
+            "address": "789 Cheese Street",
+            "postal_code": "10119",
+            "zone": "Germany - Europe"
+        },
+        {
+            "warehouse_id": 4,
+            "address": "22 Maple Road",
+            "postal_code": "M4B 1B4",
+            "zone": "Canada - North America"
+        },
+        {
+            "warehouse_id": 5,
+            "address": "456 Avenida del Queso",
+            "postal_code": "28001",
+            "zone": "Spain - Europe"
+        },
+        {
+            "warehouse_id": 6,
+            "address": "18 Kangaroo Lane",
+            "postal_code": "2000",
+            "zone": "Australia - Oceania"
+        },
+        {
+            "warehouse_id": 7,
+            "address": "88 Dairy Crescent",
+            "postal_code": "400001",
+            "zone": "India - Asia"
+        },
+        {
+            "warehouse_id": 8,
+            "address": "99 Fromage Street",
+            "postal_code": "75003",
+            "zone": "United States - North America"
+        },
+        {
+            "warehouse_id": 9,
+            "address": "33 Fromaggio Piazza",
+            "postal_code": "20100",
+            "zone": "Italy - Europe"
+        },
+        {
+            "warehouse_id": 10,
+            "address": "55 Cheese Road",
+            "postal_code": "WC2N 5DU",
+            "zone": "United Kingdom - Europe"
+        },
+        {
+            "warehouse_id": 11,
+            "address": "1 Queso Way",
+            "postal_code": "010101",
+            "zone": "Argentina - South America"
+        },
+        {
+            "warehouse_id": 12,
+            "address": "77 Camembert Close",
+            "postal_code": "8001",
+            "zone": "South Africa - Africa"
+        },
+        {
+            "warehouse_id": 13,
+            "address": "12 Fromage Road",
+            "postal_code": "98101",
+            "zone": "Japan - Asia"
+        },
+        {
+            "warehouse_id": 14,
+            "address": "54 Fromage Plaza",
+            "postal_code": "1007",
+            "zone": "Brazil - South America"
+        },
+        {
+            "warehouse_id": 15,
+            "address": "36 Dairy Path",
+            "postal_code": "10260",
+            "zone": "Thailand - Asia"
+        }
+    ],
+    "order_stockProduct": [
+        {
+            "stockproduct_id": 1,
+            "product_id": 1,
+            "warehouse_id": 1,
+            "stock": 45
+        },
+        {
+            "stockproduct_id": 2,
+            "product_id": 1,
+            "warehouse_id": 2,
+            "stock": 67
+        },
+        {
+            "stockproduct_id": 3,
+            "product_id": 2,
+            "warehouse_id": 1,
+            "stock": 56
+        },
+        {
+            "stockproduct_id": 4,
+            "product_id": 2,
+            "warehouse_id": 2,
+            "stock": 38
+        },
+        {
+            "stockproduct_id": 5,
+            "product_id": 3,
+            "warehouse_id": 1,
+            "stock": 103
+        },
+        {
+            "stockproduct_id": 6,
+            "product_id": 3,
+            "warehouse_id": 2,
+            "stock": 76
+        },
+        {
+            "stockproduct_id": 7,
+            "product_id": 4,
+            "warehouse_id": 3,
+            "stock": 80
+        },
+        {
+            "stockproduct_id": 8,
+            "product_id": 5,
+            "warehouse_id": 4,
+            "stock": 120
+        },
+        {
+            "stockproduct_id": 9,
+            "product_id": 6,
+            "warehouse_id": 5,
+            "stock": 75
+        },
+        {
+            "stockproduct_id": 10,
+            "product_id": 7,
+            "warehouse_id": 6,
+            "stock": 60
+        },
+        {
+            "stockproduct_id": 11,
+            "product_id": 8,
+            "warehouse_id": 7,
+            "stock": 90
+        },
+        {
+            "stockproduct_id": 12,
+            "product_id": 9,
+            "warehouse_id": 8,
+            "stock": 50
+        },
+        {
+            "stockproduct_id": 13,
+            "product_id": 10,
+            "warehouse_id": 9,
+            "stock": 30
+        },
+        {
+            "stockproduct_id": 14,
+            "product_id": 1,
+            "warehouse_id": 10,
+            "stock": 100
+        },
+        {
+            "stockproduct_id": 15,
+            "product_id": 2,
+            "warehouse_id": 11,
+            "stock": 150
+        },
+        {
+            "stockproduct_id": 16,
+            "product_id": 3,
+            "warehouse_id": 12,
+            "stock": 85
+        },
+        {
+            "stockproduct_id": 17,
+            "product_id": 4,
+            "warehouse_id": 13,
+            "stock": 40
+        },
+        {
+            "stockproduct_id": 18,
+            "product_id": 5,
+            "warehouse_id": 14,
+            "stock": 95
+        },
+        {
+            "stockproduct_id": 19,
+            "product_id": 6,
+            "warehouse_id": 15,
+            "stock": 110
+        }
+    ],
+    "order_historiqueventes": [
+        {
+            "id": 1,
+            "date": "2023-01-01",
+            "client_email": "john.doe@email.com"
+        },
+        {
+            "id": 2,
+            "date": "2023-01-05",
+            "client_email": "jane.smith@email.com"
+        },
+        {
+            "id": 3,
+            "date": "2023-02-01",
+            "client_email": "test@test.com"
+        },
+        {
+            "id": 4,
+            "date": "2023-02-15",
+            "client_email": "john.doe@email.com"
+        },
+        {
+            "id": 5,
+            "date": "2023-03-10",
+            "client_email": "jane.smith@email.com"
+        },
+        {
+            "id": 6,
+            "date": "2023-03-20",
+            "client_email": "test@test.com"
+        },
+        {
+            "id": 7,
+            "date": "2023-04-05",
+            "client_email": "orders@walmart.com"
+        },
+        {
+            "id": 8,
+            "date": "2023-04-15",
+            "client_email": "purchase@carrefour.com"
+        },
+        {
+            "id": 9,
+            "date": "2023-05-01",
+            "client_email": "contact@tesco.com"
+        },
+        {
+            "id": 10,
+            "date": "2023-05-15",
+            "client_email": "info@aldi.com"
+        },
+        {
+            "id": 11,
+            "date": "2023-06-01",
+            "client_email": "support@lidl.com"
+        },
+        {
+            "id": 12,
+            "date": "2023-06-15",
+            "client_email": "sales@sainsburys.co.uk"
+        },
+        {
+            "id": 13,
+            "date": "2023-07-10",
+            "client_email": "orders@costco.com"
+        },
+        {
+            "id": 14,
+            "date": "2023-07-20",
+            "client_email": "contact@target.com"
+        },
+        {
+            "id": 15,
+            "date": "2023-08-05",
+            "client_email": "orders@walmart.com"
+        },
+        {
+            "id": 16,
+            "date": "2023-08-15",
+            "client_email": "purchase@carrefour.com"
+        },
+        {
+            "id": 17,
+            "date": "2023-09-01",
+            "client_email": "contact@tesco.com"
+        },
+        {
+            "id": 18,
+            "date": "2023-09-15",
+            "client_email": "info@aldi.com"
+        },
+        {
+            "id": 19,
+            "date": "2023-10-01",
+            "client_email": "support@lidl.com"
+        },
+        {
+            "id": 20,
+            "date": "2023-10-20",
+            "client_email": "sales@sainsburys.co.uk"
+        },
+        {
+            "id": 21,
+            "date": "2023-11-05",
+            "client_email": "orders@costco.com"
+        },
+        {
+            "id": 22,
+            "date": "2023-11-15",
+            "client_email": "contact@target.com"
+        }
+    ],
+    "order_produithistoriqueventes": [
+        {
+            "id": 1,
+            "historiqueventes_id": 1,
+            "produits_id": 1,
+            "quantite": 3,
+            "amount": 31.5
+        },
+        {
+            "id": 2,
+            "historiqueventes_id": 1,
+            "produits_id": 2,
+            "quantite": 6,
+            "amount": 17.5
+        },
+        {
+            "id": 3,
+            "historiqueventes_id": 2,
+            "produits_id": 3,
+            "quantite": 2,
+            "amount": 30.5
+        },
+        {
+            "id": 4,
+            "historiqueventes_id": 2,
+            "produits_id": 1,
+            "quantite": 3,
+            "amount": 31.5
+        },
+        {
+            "id": 5,
+            "historiqueventes_id": 3,
+            "produits_id": 2,
+            "quantite": 10,
+            "amount": 310.5
+        },
+        {
+            "id": 6,
+            "historiqueventes_id": 3,
+            "produits_id": 1,
+            "quantite": 12,
+            "amount": 125.5
+        },
+        {
+            "id": 7,
+            "historiqueventes_id": 4,
+            "produits_id": 3,
+            "quantite": 8,
+            "amount": 79.5
+        },
+        {
+            "id": 8,
+            "historiqueventes_id": 4,
+            "produits_id": 2,
+            "quantite": 7,
+            "amount": 67.5
+        },
+        {
+            "id": 9,
+            "historiqueventes_id": 5,
+            "produits_id": 2,
+            "quantite": 17,
+            "amount": 250.5
+        },
+        {
+            "id": 10,
+            "historiqueventes_id": 5,
+            "produits_id": 3,
+            "quantite": 7,
+            "amount": 99.5
+        },
+        {
+            "id": 11,
+            "historiqueventes_id": 6,
+            "produits_id": 1,
+            "quantite": 15,
+            "amount": 167.5
+        },
+        {
+            "id": 12,
+            "historiqueventes_id": 6,
+            "produits_id": 2,
+            "quantite": 8,
+            "amount": 109.5
+        },
+        {
+            "id": 13,
+            "historiqueventes_id": 7,
+            "produits_id": 4,
+            "quantite": 20,
+            "amount": 180.0
+        },
+        {
+            "id": 14,
+            "historiqueventes_id": 8,
+            "produits_id": 5,
+            "quantite": 25,
+            "amount": 325.0
+        },
+        {
+            "id": 15,
+            "historiqueventes_id": 9,
+            "produits_id": 6,
+            "quantite": 30,
+            "amount": 390.0
+        },
+        {
+            "id": 16,
+            "historiqueventes_id": 10,
+            "produits_id": 7,
+            "quantite": 40,
+            "amount": 800.0
+        },
+        {
+            "id": 17,
+            "historiqueventes_id": 11,
+            "produits_id": 8,
+            "quantite": 15,
+            "amount": 337.5
+        },
+        {
+            "id": 18,
+            "historiqueventes_id": 12,
+            "produits_id": 9,
+            "quantite": 10,
+            "amount": 450.0
+        },
+        {
+            "id": 19,
+            "historiqueventes_id": 13,
+            "produits_id": 10,
+            "quantite": 50,
+            "amount": 425.0
+        },
+        {
+            "id": 20,
+            "historiqueventes_id": 14,
+            "produits_id": 1,
+            "quantite": 10,
+            "amount": 105.0
+        },
+        {
+            "id": 21,
+            "historiqueventes_id": 15,
+            "produits_id": 2,
+            "quantite": 8,
+            "amount": 102.4
+        },
+        {
+            "id": 22,
+            "historiqueventes_id": 16,
+            "produits_id": 3,
+            "quantite": 12,
+            "amount": 309.0
+        },
+        {
+            "id": 23,
+            "historiqueventes_id": 17,
+            "produits_id": 4,
+            "quantite": 18,
+            "amount": 324.0
+        },
+        {
+            "id": 24,
+            "historiqueventes_id": 18,
+            "produits_id": 5,
+            "quantite": 22,
+            "amount": 286.0
+        },
+        {
+            "id": 25,
+            "historiqueventes_id": 19,
+            "produits_id": 6,
+            "quantite": 25,
+            "amount": 325.0
         }
     ]
 }

@@ -19,7 +19,8 @@ class Client(models.Model):
 # Modèle pour les produits
 class Produit(models.Model):
     product_id = models.AutoField(primary_key=True)
-    stock = models.IntegerField(default=0)  # Champ pour le stock
+    #stock = models.IntegerField(default=0)  # Champ pour le stock
+    
 
     def __str__(self):
         return f"Produit {self.product_id}"
@@ -31,7 +32,9 @@ class Fournisseur(models.Model):
     nom = models.CharField(max_length=50)
     contact = models.JSONField()  # Contient nom_contact, telephone, email
     adresse = models.JSONField()  # Contient rue, ville, code_postal, pays
-    produits_fournis = models.ForeignKey(Produit, on_delete=models.CASCADE)  # Lien vers un produit
+    materiel_fournit = models.CharField(max_length=255, null=True, blank=True)
+    usine_livree = models.CharField(max_length=255, null=True, blank=True)
+    prix = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
 
     def __str__(self):
         return self.nom
@@ -82,6 +85,12 @@ class Order(models.Model):
         ('In transit', 'In transit'),
         ('Delivered', 'Delivered'),
         ('Cancelled', 'Cancelled'),
+    ])
+    delivery_mode = models.CharField(max_length=10, choices=[
+        ('Train', 'Train'),
+        ('Airplane', 'Airplane'),
+        ('Truck', 'Truck'),
+        ('Ship', 'Ship'),
     ])
     total_price = models.DecimalField(max_digits=10, decimal_places=2)
     credit_card = models.CharField(max_length=16)
@@ -182,3 +191,34 @@ class Warehouse(models.Model):
 
     def __str__(self):
         return f"Warehouse {self.warehouse_id} - {self.address}"
+    
+# Modèle pour la gestion des stocks des produits dans les entrepôts
+class OrderStockProduct(models.Model):
+    stockproduct_id = models.IntegerField(primary_key=True)
+    product = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    warehouse = models.ForeignKey(Warehouse, on_delete=models.CASCADE)
+    stock = models.IntegerField()
+
+    class Meta:
+        unique_together = ('product', 'warehouse')  # Empêche les doublons pour le même produit dans le même entrepôt
+
+    def __str__(self):
+        return f"Stock_product {self.stockproduct_id} for Product {self.product.name} in Warehouse {self.warehouse.warehouse_id} - Stock: {self.stock}"
+
+class OrderHistoriqueVentes(models.Model):
+    id = models.AutoField(primary_key=True)
+    date = models.DateField()
+    client_email = models.ForeignKey(Client, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"Historique vente {self.id} - {self.client_email.email} - {self.date}"
+
+class ProduitOrderHistorique(models.Model):
+    id = models.AutoField(primary_key=True)
+    historiqueventes_id = models.ForeignKey(OrderHistoriqueVentes, on_delete=models.CASCADE)
+    produits_id = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    quantite = models.IntegerField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+
+    def __str__(self):
+        return f"Produit {self.produits_id.name} - Quantité: {self.quantite} - Montant: {self.amount}"

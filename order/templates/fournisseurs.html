@@ -14,29 +14,29 @@
             padding: 0;
             background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
             background-size: cover;
-            color: #A0522D; /* Dark wine color for text */
+            color: #A0522D;
         }
 
         header {
             text-align: center;
             padding: 20px;
-            background-color: rgba(255, 255, 255, 0.8); /* Light background for header */
-            border-bottom: 5px solid #A0522D; /* Dark wine border */
+            background-color: rgba(255, 255, 255, 0.8);
+            border-bottom: 5px solid #A0522D;
             margin-bottom: 20px;
         }
 
         h1 {
             margin: 0;
-            color: #FFD700; /* Gold color for header */
+            color: #FFD700;
         }
 
         section {
             margin: 0 auto;
             padding: 20px;
-            width: 80%; /* Adjust width as needed */
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            width: 80%;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         table {
@@ -48,16 +48,16 @@
         th, td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ddd; /* Light grey border */
+            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background-color: #FFD700; /* Gold background for header */
-            color: #A0522D; /* Dark wine color for header text */
+            background-color: #FFD700;
+            color: #A0522D;
         }
 
         tr:hover {
-            background-color: rgba(255, 215, 0, 0.2); /* Highlight row on hover */
+            background-color: rgba(255, 215, 0, 0.2);
         }
 
         form {
@@ -66,29 +66,46 @@
             margin-top: 20px;
         }
 
-        input[type="text"],
-        button {
+        input, button {
             padding: 10px;
             margin: 5px 0;
             border: 1px solid #ddd;
-            border-radius: 5px; /* Rounded corners */
+            border-radius: 5px;
         }
 
         button {
-            background-color: #A0522D; /* Dark wine color */
-            color: white; /* White text */
+            background-color: #A0522D;
+            color: white;
             cursor: pointer;
             transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #FFD700; /* Gold on hover */
+            background-color: #FFD700;
         }
 
         .message {
             text-align: center;
             color: green;
             margin: 20px 0;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .search-bar input[type="text"] {
+            width: 80%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .search-bar button {
+            padding: 10px;
         }
     </style>
 </head>
@@ -101,6 +118,13 @@
     </header>
 
     <section>
+        <div class="search-bar">
+            <form method="get">
+                <input type="text" name="search" placeholder="Rechercher un fournisseur...">
+                <button type="submit">Rechercher</button>
+            </form>
+        </div>
+
         <h2>Liste des Fournisseurs</h2>
         <table>
             <thead>
@@ -109,6 +133,9 @@
                     <th>Nom</th>
                     <th>Téléphone</th>
                     <th>Email</th>
+                    <th>Matériel fourni</th>
+                    <th>Usine livrée</th>
+                    <th>Prix</th>
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -119,6 +146,9 @@
                     <td>{{ fournisseur.nom }}</td>
                     <td>{{ fournisseur.contact.telephone }}</td>
                     <td>{{ fournisseur.contact.email }}</td>
+                    <td>{{ fournisseur.materiel_fournit }}</td>
+                    <td>{{ fournisseur.usine_livree }}</td>
+                    <td>{{ fournisseur.prix }}</td>
                     <td>
                         <form method="post" style="display:inline;">
                             {% csrf_token %}
@@ -138,6 +168,9 @@
                                 <input type="text" name="ville" placeholder="Ville" value="{{ fournisseur.adresse.ville }}" required>
                                 <input type="text" name="code_postal" placeholder="Code Postal" value="{{ fournisseur.adresse.code_postal }}" required>
                                 <input type="text" name="pays" placeholder="Pays" value="{{ fournisseur.adresse.pays }}" required>
+                                <input type="text" name="materiel_fournit" placeholder="Matériel fourni" value="{{ fournisseur.materiel_fournit }}" required>
+                                <input type="text" name="usine_livree" placeholder="Usine livrée" value="{{ fournisseur.usine_livree }}" required>
+                                <input type="number" step="0.01" name="prix" placeholder="Prix" value="{{ fournisseur.prix }}" required>
                                 <button type="submit" name="action" value="update">Mettre à jour</button>
                             </form>
                         </div>
@@ -150,14 +183,17 @@
         <h2>Ajouter un Nouveau Fournisseur</h2>
         <form method="post">
             {% csrf_token %}
-            <input type="text" name="nom" placeholder="Nom" required>
-            <input type="text" name="nom_contact" placeholder="Nom du Contact" required>
-            <input type="text" name="telephone" placeholder="Téléphone" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="text" name="rue" placeholder="Rue" required>
-            <input type="text" name="ville" placeholder="Ville" required>
-            <input type="text" name="code_postal" placeholder="Code Postal" required>
-            <input type="text" name="pays" placeholder="Pays" required>
+            <input type="text" name="nom" placeholder="Nom">
+            <input type="text" name="nom_contact" placeholder="Nom du Contact">
+            <input type="text" name="telephone" placeholder="Téléphone">
+            <input type="email" name="email" placeholder="Email">
+            <input type="text" name="rue" placeholder="Rue">
+            <input type="text" name="ville" placeholder="Ville">
+            <input type="text" name="code_postal" placeholder="Code Postal">
+            <input type="text" name="pays" placeholder="Pays">
+            <input type="text" name="materiel_fournit" placeholder="Matériel fourni">
+            <input type="text" name="usine_livree" placeholder="Usine livrée">
+            <input type="number" step="0.01" name="prix" placeholder="Prix">
             <button type="submit" name="action" value="add">Ajouter</button>
         </form>
     </section>

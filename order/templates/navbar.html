@@ -57,11 +57,12 @@
         <img src="{% static 'logo4.jpg' %}" alt="Logo" class="logo">
         <ul class="nav">
             <li><a href="{% url 'home' %}" class="nav-link">Home</a></li>
-            <li><a href="{% url 'produces' %}" class="nav-link">Order Now</a></li>
-            <li><a href="{% url 'employees' %}" class="nav-link">Employees</a></li>
-            <li><a href="{% url 'stock_management' %}" class="nav-link">Manage Stock</a></li>
-            <li><a href="{% url 'catalog_management' %}" class="nav-link">Product Catalog</a></li>
-            <li><a href="{% url 'client_management' %}" class="nav-link">Client Management</a></li>
+            <li><a href="{% url 'produces' %}" class="nav-link">Boutique en ligne</a></li>
+            <li><a href="{% url 'employees' %}" class="nav-link">Employe</a></li>
+            <li><a href="{% url 'statistics_view' %}" class="nav-link">Statistiques</a></li>
+            
+            <li><a href="{% url 'catalog_management' %}" class="nav-link">Catalogue</a></li>
+            <li><a href="{% url 'client_management' %}" class="nav-link">Clients</a></li>
             <li><a href="{% url 'order_management' %}" class="nav-link">Gestion des Commandes</a></li>
             <li><a href="{% url 'warehouse_management' %}" class="nav-link">Gestion des Entrepôts</a></li>
             <li><a href="{% url 'fournisseurs' %}" class="nav-link">Fournisseurs</a></li>
