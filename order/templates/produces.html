@@ -12,16 +12,16 @@
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed; /* Background image */
-            background-size: cover; /* Cover the entire screen */
-            color: #A0522D; /* Dark wine color for text */
+            background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
+            background-size: cover;
+            color: #A0522D;
         }
 
         header {
-            background-color: rgba(255, 255, 255, 0.8); /* Light background with transparency */
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             text-align: center;
-            border-bottom: 5px solid #FFD700; /* Gold border for distinction */
+            border-bottom: 5px solid #FFD700;
         }
 
         h1 {
@@ -31,15 +31,87 @@
 
         section {
             padding: 2em;
-            text-align: center;
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for section background */
-            margin: 20px; /* Margin for spacing */
-            border-radius: 10px; /* Rounded corners */
+            margin: 20px;
+            border-radius: 10px;
         }
 
-        .product {
-            margin-bottom: 20px;
-            text-align: center; /* Center product content */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 0 auto;
+            max-width: 1200px;
+            padding: 20px;
+        }
+
+        .grid-item {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            text-align: center;
+            padding: 15px;
+        }
+
+        .grid-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .grid-item h2 {
+            font-size: 1.6em;
+            font-weight: bold;
+            color: #A0522D;
+            margin-bottom: 10px;
+        }
+
+        .grid-item .price {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #530171;
+            margin-bottom: 5px;
+        }
+
+        .grid-item .price:hover {
+            color: #530171;
+            transform: scale(1.1);
+            transition: 0.3s ease-in-out;
+        }
+
+        .grid-item .quantity-label {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #A0522D;
+            margin-bottom: 5px;
+        }
+
+        .grid-item input {
+            width: 60px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            font-size: 1.1em;
+        }
+
+        button.submit-button {
+            background-color: #FFD700;
+            color: #A0522D;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        button.submit-button:hover {
+            background-color: #A0522D;
+            color: #FFD700;
         }
 
         .cart-logo {
@@ -47,47 +119,12 @@
             height: auto;
             margin-right: 8px;
         }
-
-        .grid-container {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            margin: 0 auto; /* Center grid container */
-            max-width: 1200px; /* Max width for the grid */
-        }
-
-        .grid-item {
-            width: calc(33.33% - 20px);
-            margin-bottom: 20px;
-            margin-right: 20px;
-            text-align: center; /* Center text */
-        }
-
-        .grid-item:nth-child(3n) {
-            margin-right: 0; /* Reset margin for the last item in each row */
-        }
-
-        button.submit-button {
-            background-color: #FFD700; /* Gold background for button */
-            color: #A0522D; /* Dark wine color for button text */
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            font-size: 1em;
-            cursor: pointer;
-            transition: background-color 0.3s, color 0.3s; /* Smooth transition for hover */
-        }
-
-        button.submit-button:hover {
-            background-color: #A0522D; /* Change background on hover */
-            color: #FFD700; /* Change text color on hover */
-        }
     </style>
 </head>
 
 <body>
     {% include 'navbar.html' %}
-    
+
     <header>
         <h1>Produits Fromagers et Vins</h1>
         <p>Sélectionnez la quantité pour chaque fromage ou vin</p>
@@ -99,15 +136,14 @@
             Aller au panier
         </button>
 
-        <br><br>
-        
         <div class="grid-container">
             {% for product in products %}
                 <div class="product grid-item" id="{{ product.product_id }}">
-                    <img src="{% static product.name|lower|add:'.jpg' %}" alt="{{ product.name|lower }}" />
+                    <img src="{% static product.name|lower|add:'.png' %}" alt="{{ product.name|lower }}">
+
                     <h2>{{ product.name }}</h2>
-                    <p id="{{ product.name|lower }}-price">Prix: {{ product.price }}€</p> <!-- Price displayed per unit -->
-                    <label for="{{ product.name|lower }}-quantity">Quantité:</label>
+                    <p class="price" id="{{ product.name|lower }}-price">Prix: {{ product.price }}€</p>
+                    <label class="quantity-label" for="{{ product.name|lower }}-quantity">Quantité:</label>
                     <input type="number" id="{{ product.name|lower }}-quantity" class="quantity" value="0" min="0">
                 </div>
             {% endfor %}
@@ -120,7 +156,7 @@
 
     <script id="config" type="application/json">
         {
-          "staticBaseUrl": "{% static '' %}"
+            "staticBaseUrl": "{% static '' %}"
         }
     </script>
 
@@ -129,19 +165,17 @@
         var staticBaseUrl = config.staticBaseUrl;
 
         function goToCart() {
-            // Mettre à jour les quantités
             updateQuantities();
 
-            // Vérifiez qu'au moins un article est sélectionné
             var cartItems = JSON.parse(localStorage.getItem("cartItems")) || {};
             var cartItemsArray = Object.values(cartItems);
-            var cartItemsSum = cartItemsArray.reduce((a, b) => a + b.quantity, 0); // Correction pour obtenir la somme des quantités
+            var cartItemsSum = cartItemsArray.reduce((a, b) => a + b.quantity, 0);
 
             if (cartItemsSum === 0) {
                 alert("Veuillez sélectionner au moins un article");
                 return;
             }
-            
+
             window.location.href = "/order/order_infos/";
         }
 
@@ -161,7 +195,7 @@
                         name: name,
                         quantity: quantity,
                         price: price
-                    }
+                    };
                 }
             });
 

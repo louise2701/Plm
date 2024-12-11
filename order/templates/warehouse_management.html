@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestion des Entrepôts</title>
+    <title>Gestion des Entrepôts et Stocks</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'styles/main.css' %}">
     <style>
@@ -14,73 +14,99 @@
             padding: 0;
             background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
             background-size: cover;
-            color: #A0522D; /* Dark wine color for text */
+            color: #A0522D;
         }
 
         h1 {
             text-align: center;
             padding: 20px;
-            color: #FFD700; /* Gold color for the header */
-            background-color: rgba(255, 255, 255, 0.8); /* Light background with transparency */
-            border-bottom: 5px solid #A0522D; /* Dark wine border */
+            color: #FFD700;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-bottom: 5px solid #A0522D;
             margin: 0;
         }
 
         table {
-            width: 80%; /* Set table width */
-            margin: 20px auto; /* Center the table */
-            border-collapse: collapse; /* Combine borders */
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white */
-            border-radius: 10px; /* Rounded corners */
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
         }
 
         th, td {
             padding: 12px;
             text-align: left;
-            border-bottom: 1px solid #ddd; /* Light grey border */
+            border-bottom: 1px solid #ddd;
         }
 
         th {
-            background-color: #FFD700; /* Gold background for header */
-            color: #A0522D; /* Dark wine color for header text */
+            background-color: #FFD700;
+            color: #A0522D;
         }
 
         tr:hover {
-            background-color: rgba(255, 215, 0, 0.2); /* Highlight row on hover */
+            background-color: rgba(255, 215, 0, 0.2);
+        }
+
+        .low-stock {
+            color: red;
+            font-weight: bold;
         }
 
         form {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 10px; /* Space between elements */
+            gap: 10px;
         }
 
-        input {
+        select, input[type="number"] {
             padding: 5px;
-            border-radius: 5px; /* Rounded corners for inputs */
-            border: 1px solid #ddd; /* Light border */
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
 
         button {
             padding: 5px 10px;
-            background-color: #A0522D; /* Dark wine color */
-            color: white; /* White text */
-            border: none; /* Remove border */
-            border-radius: 5px; /* Rounded corners */
-            cursor: pointer; /* Pointer cursor on hover */
-            transition: background-color 0.3s; /* Smooth transition */
+            background-color: #A0522D;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #FFD700; /* Change color on hover */
+            background-color: #FFD700;
         }
 
         .message {
             text-align: center;
             color: green;
             margin: 20px;
+        }
+
+        .search-form {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        header {
+            text-align: center;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.8); /* Light background for header */
+            border-bottom: 5px solid #A0522D; /* Dark wine border */
+            margin-bottom: 20px;
+        }
+
+        .search-form input {
+            padding: 5px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
         }
     </style>
 </head>
@@ -89,32 +115,57 @@
     {% include 'navbar.html' %}
 
     <header>
-        <h1>Gestion des Entrepôts</h1>
+        <h1>Gestion des Entrepôts et Stocks</h1>
     </header>
 
+    <!-- Recherche des entrepôts -->
+    <div class="search-form">
+        <form method="get">
+            <input type="text" name="location" placeholder="Rechercher par lieu" value="{{ request.GET.location }}">
+            <input type="text" name="product" placeholder="Rechercher par produit" value="{{ request.GET.product }}">
+            <input type="text" name="warehouse" placeholder="Rechercher par entrepôt" value="{{ request.GET.warehouse }}">
+            <button type="submit">Rechercher</button>
+        </form>
+    </div>
+
+    <!-- Affichage des entrepôts et produits -->
     <table>
         <thead>
             <tr>
-                <th>ID de l'Entrepôt</th>
+                <th>ID Entrepôt</th>
                 <th>Adresse</th>
                 <th>Code Postal</th>
                 <th>Zone</th>
+                <th>Nom Produit</th>
+                <th>Type Produit</th>
+                <th>Stock</th>
+                <th>Prix</th>
+                <th>Sous-traitant</th>
                 <th>Action</th>
             </tr>
         </thead>
         <tbody>
-            {% for warehouse in warehouses %}
+            {% for data in warehouse_data %}
             <tr>
-                <td>{{ warehouse.warehouse_id }}</td>
-                <td>{{ warehouse.address }}</td>
-                <td>{{ warehouse.postal_code }}</td>
-                <td>{{ warehouse.zone }}</td>
+                <td>{{ data.warehouse_id }}</td>
+                <td>{{ data.address }}</td>
+                <td>{{ data.postal_code }}</td>
+                <td>{{ data.zone }}</td>
+                <td>{{ data.product_name }}</td>
+                <td>{{ data.product_type }}</td>
+                <td class="{% if data.stock < 50 %}low-stock{% endif %}">{{ data.stock }}</td>
+                <td>{{ data.price }}</td>
+                <td>{{ data.subcontractor }}</td>
                 <td>
                     <form method="post">
                         {% csrf_token %}
-                        <input type="hidden" name="warehouse_id" value="{{ warehouse.warehouse_id }}">
-                        <input type="text" name="address" placeholder="Nouvelle adresse" required>
-                        <input type="text" name="postal_code" placeholder="Nouveau code postal" required>
+                        <input type="hidden" name="product_id" value="{{ data.product_id }}">
+                        <input type="hidden" name="warehouse_id" value="{{ data.warehouse_id }}">
+                        <select name="action">
+                            <option value="increase">Augmenter</option>
+                            <option value="decrease">Réduire</option>
+                        </select>
+                        <input type="number" name="amount" min="1" required>
                         <button type="submit">Modifier</button>
                     </form>
                 </td>
@@ -123,12 +174,13 @@
         </tbody>
     </table>
 
+    <!-- Affichage des messages -->
     {% if messages %}
-        <div class="message">
-            {% for message in messages %}
-                <p>{{ message }}</p>
-            {% endfor %}
-        </div>
+    <div class="message">
+        {% for message in messages %}
+        <p>{{ message }}</p>
+        {% endfor %}
+    </div>
     {% endif %}
 
     <footer>

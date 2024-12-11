@@ -306,6 +306,149 @@ def production(request):
     return render(request, 'production.html', {'productions': productions, 'plannings': plannings, 'produits': produits})
 
 
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Produit
+import json
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Produit
+from .models import Warehouse
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Warehouse, Produit, Cheese, Wine, SousTraitant
+import json
+
+from django.shortcuts import render
+from django.contrib import messages
+from .models import Warehouse, Produit, Cheese, Wine, SousTraitant
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Warehouse, Produit, OrderStockProduct, Cheese, Wine, SousTraitant
+from django.db.models import Q
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Warehouse, Produit, OrderStockProduct
+from django.db import transaction
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Warehouse, Produit, OrderStockProduct
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Warehouse, Produit, OrderStockProduct, Cheese, Wine, SousTraitant
+from django.db.models import Q
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Warehouse, Produit, OrderStockProduct, Cheese, Wine, SousTraitant
+from django.db.models import Q
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Warehouse, Produit, OrderStockProduct, Cheese, Wine, SousTraitant
+from django.db.models import Q
+
+def warehouse_management(request):
+    # Collect search filters from GET request
+    location_filter = request.GET.get('location', '')
+    product_filter = request.GET.get('product', '')
+    warehouse_filter = request.GET.get('warehouse', '')
+
+    # Start by querying all warehouses
+    warehouses = Warehouse.objects.all()
+
+    # Filter warehouses by location if specified
+    if location_filter:
+        warehouses = warehouses.filter(address__icontains=location_filter)
+
+    # Filter warehouses by warehouse_id if specified
+    if warehouse_filter:
+        warehouses = warehouses.filter(warehouse_id=warehouse_filter)
+
+    # Prepare the list of warehouse data including related product details
+    warehouse_data = []
+    for warehouse in warehouses:
+        if product_filter:
+            cheeses = Cheese.objects.filter(name__icontains=product_filter)
+            wines = Wine.objects.filter(name__icontains=product_filter)
+        else:
+            cheeses = Cheese.objects.all()
+            wines = Wine.objects.all()
+
+        for cheese in cheeses:
+            stock_entry = OrderStockProduct.objects.filter(product=cheese.product_id, warehouse=warehouse).first()
+            if stock_entry:
+                subcontractor = SousTraitant.objects.filter(produits_traites=cheese.product_id).first()
+                warehouse_data.append({
+                    'warehouse_id': warehouse.warehouse_id,
+                    'address': warehouse.address,
+                    'postal_code': warehouse.postal_code,
+                    'zone': warehouse.zone,
+                    'product_name': cheese.name,
+                    'product_id': cheese.product_id.product_id,  # Pass only the product ID
+                    'product_type': 'Cheese',
+                    'stock': stock_entry.stock,
+                    'price': cheese.price_per_kg,
+                    'subcontractor': subcontractor.nom if subcontractor else "None specified"
+                })
+
+        for wine in wines:
+            stock_entry = OrderStockProduct.objects.filter(product=wine.product_id, warehouse=warehouse).first()
+            if stock_entry:
+                subcontractor = SousTraitant.objects.filter(produits_traites=wine.product_id).first()
+                warehouse_data.append({
+                    'warehouse_id': warehouse.warehouse_id,
+                    'address': warehouse.address,
+                    'postal_code': warehouse.postal_code,
+                    'zone': warehouse.zone,
+                    'product_name': wine.name,
+                    'product_id': wine.product_id.product_id,  # Pass only the product ID
+                    'product_type': 'Wine',
+                    'stock': stock_entry.stock,
+                    'price': wine.price_per_bottle,
+                    'subcontractor': subcontractor.nom if subcontractor else "None specified"
+                })
+
+    # Handling the stock update form (POST request)
+    if request.method == 'POST':
+        product_id = request.POST.get('product_id')
+        warehouse_id = request.POST.get('warehouse_id')
+        action = request.POST.get('action')
+        amount = int(request.POST.get('amount', 0))
+
+        try:
+            # Retrieve the product and warehouse using product_id and warehouse_id
+            product = Produit.objects.get(product_id=product_id)
+            warehouse = Warehouse.objects.get(warehouse_id=warehouse_id)
+
+            # Get the OrderStockProduct entry for this product in the warehouse
+            stock_entry = OrderStockProduct.objects.filter(product=product, warehouse=warehouse).first()
+
+            if not stock_entry:
+                # If no existing stock entry, create a new one with the specified stock amount
+                stock_entry = OrderStockProduct(product=product, warehouse=warehouse, stock=0)
+
+            # Update stock based on the action
+            if action == 'increase':
+                stock_entry.stock += amount  # Increase stock
+            elif action == 'decrease':
+                stock_entry.stock -= amount  # Decrease stock
+                if stock_entry.stock < 0:
+                    stock_entry.stock = 0  # Ensure stock doesn't go negative
+
+            stock_entry.save()  # Save the updated stock entry
+            messages.success(request, f"Stock updated for {product.product_id} in {warehouse.address}.")
+        except (Produit.DoesNotExist, Warehouse.DoesNotExist):
+            messages.error(request, 'Product or Warehouse not found.')
+
+        return redirect('warehouse_management')  # Rediriger vers la même page après la modification
+
+    products = Produit.objects.all()
+
+    return render(request, 'warehouse_management.html', {'warehouse_data': warehouse_data, 'products': products})
+
 def stock_management(request):
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
@@ -316,55 +459,55 @@ def stock_management(request):
             product = Produit.objects.get(product_id=product_id)
 
             if action == 'increase':
-                product.stock += amount  # Augmenter le stock
+                product.stock += amount
             elif action == 'decrease':
-                product.stock -= amount  # Réduire le stock
+                product.stock -= amount
                 if product.stock < 0:
-                    product.stock = 0  # S'assurer que le stock ne devienne pas négatif
+                    product.stock = 0
 
-            product.save()  # Enregistrer les modifications
+            product.save()
             messages.success(request, f'Stock updated for {product.product_id}.')
 
         except Produit.DoesNotExist:
             messages.error(request, 'Product not found.')
 
-        return redirect('stock_management')  # Rediriger vers la même page après la modification
+        return redirect('warehouse_management')  # Rediriger vers la page d'administration des entrepôts
 
-    # Charger les données JSON depuis le fichier
-    with open('data.json') as f:
-        data = json.load(f)
+    # Charger les données des produits
+    products = Produit.objects.all()
 
-    products = []
-    for product in Produit.objects.all():
-        product_id = product.product_id
-        stock = product.stock
+    return render(request, 'warehouse_management.html', {'products': products})
 
-        # Rechercher le nom du produit dans order_fiche_produit
-        fiche_produit = next((item for item in data['order_fiche_produit'] if item['product_id'] == product_id), None)
-        product_name = fiche_produit['nom'] if fiche_produit else f"Produit {product_id}"
+from django.db.models import Q
 
-        products.append({
-            'product_id': product_id,
-            'name': product_name,  # Utiliser le nom du produit ici
-            'stock': stock,
-        })
-
-    return render(request, 'stock_management.html', {'products': products})
 def fournisseurs(request):
     # Récupérer tous les fournisseurs
     fournisseurs_list = Fournisseur.objects.all()
 
+    # Vérifie si une recherche a été effectuée
+    if request.GET.get('search'):
+        search_query = request.GET.get('search')
+        # Filtrage des fournisseurs selon les critères
+        fournisseurs_list = fournisseurs_list.filter(
+            Q(nom__icontains=search_query) |  # Recherche par nom
+            Q(contact__icontains=search_query) |  # Recherche dans les informations de contact
+            Q(adresse__icontains=search_query) |  # Recherche dans les adresses (pays, ville, etc.)
+            Q(materiel_fournit__icontains=search_query) |  # Recherche par matériel fourni
+            Q(usine_livree__icontains=search_query)  # Recherche par usine livrée
+        )
+
     if request.method == 'POST':
         action = request.POST.get('action')
         fournisseur_id = request.POST.get('fournisseur_id')
-        
+
         if action == 'delete':
+            # Supprimer un fournisseur
             fournisseur = get_object_or_404(Fournisseur, fournisseur_id=fournisseur_id)
             fournisseur.delete()
             messages.success(request, 'Fournisseur supprimé avec succès.')
 
         elif action == 'add':
-            # Ajout d'un nouveau fournisseur
+            # Ajouter un nouveau fournisseur
             nom = request.POST.get('nom')
             contact = {
                 "nom_contact": request.POST.get('nom_contact'),
@@ -377,13 +520,23 @@ def fournisseurs(request):
                 "code_postal": request.POST.get('code_postal'),
                 "pays": request.POST.get('pays')
             }
-            produits_fournis = request.POST.get('produits_fournis')  # Cette partie pourrait être plus complexe selon votre structure
-            fournisseur = Fournisseur(nom=nom, contact=contact, adresse=adresse)
+            materiel_fournit = request.POST.get('materiel_fournit')
+            usine_livree = request.POST.get('usine_livree')
+            prix = request.POST.get('prix')
+
+            fournisseur = Fournisseur(
+                nom=nom, 
+                contact=contact, 
+                adresse=adresse, 
+                materiel_fournit=materiel_fournit,
+                usine_livree=usine_livree,
+                prix=prix
+            )
             fournisseur.save()
             messages.success(request, 'Fournisseur ajouté avec succès.')
 
         elif action == 'update':
-            # Mise à jour d'un fournisseur
+            # Mettre à jour un fournisseur
             fournisseur = get_object_or_404(Fournisseur, fournisseur_id=fournisseur_id)
             fournisseur.nom = request.POST.get('nom')
             fournisseur.contact = {
@@ -397,12 +550,17 @@ def fournisseurs(request):
                 "code_postal": request.POST.get('code_postal'),
                 "pays": request.POST.get('pays')
             }
+            fournisseur.materiel_fournit = request.POST.get('materiel_fournit')
+            fournisseur.usine_livree = request.POST.get('usine_livree')
+            fournisseur.prix = request.POST.get('prix')
             fournisseur.save()
             messages.success(request, 'Fournisseur mis à jour avec succès.')
 
         return redirect('fournisseurs')  # Redirige vers la même page après modification
 
     return render(request, 'fournisseurs.html', {'fournisseurs': fournisseurs_list})
+
+
 
 
 
@@ -483,49 +641,31 @@ def catalog_management(request):
     })
 
 
-def warehouse_management(request):
-    if request.method == 'POST':
-        warehouse_id = request.POST.get('warehouse_id')
-        new_address = request.POST.get('address')
-        new_postal_code = request.POST.get('postal_code')
+from django.shortcuts import render
+from .models import Warehouse, Produit
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Warehouse, Produit, Cheese, Wine
+from django.db.models import Q
+from django.shortcuts import render
+from .models import Warehouse, Cheese, Wine, SousTraitant, Produit
+from django.shortcuts import render
+from .models import Warehouse, Cheese, Wine, SousTraitant, Produit
 
-        # Mise à jour de la base de données (JSON ou DB)
-        try:
-            with open('data.json') as f:
-                data = json.load(f)
+from django.shortcuts import render
+from .models import Warehouse, Cheese, Wine, SousTraitant, Produit
 
-            warehouse = next((item for item in data['order_warehouse'] if item['warehouse_id'] == int(warehouse_id)), None)
-            if warehouse:
-                warehouse['address'] = new_address
-                warehouse['postal_code'] = new_postal_code
-                
-                # Sauvegarder les modifications dans le fichier
-                with open('data.json', 'w') as f:
-                    json.dump(data, f)
-                    
-                messages.success(request, 'Entrepôt mis à jour avec succès.')
-            else:
-                messages.error(request, 'Entrepôt non trouvé.')
+from django.shortcuts import render
+from .models import Warehouse, Cheese, Wine, SousTraitant, Produit
 
-        except Exception as e:
-            messages.error(request, f'Erreur lors de la mise à jour: {e}')
+from django.shortcuts import render
+from .models import Warehouse, Produit, Cheese, Wine
 
-        return redirect('warehouse_management')  # Rediriger vers la page après modification
+from django.shortcuts import render
+from .models import Warehouse, Produit, Cheese, Wine
+from django.shortcuts import render
+from .models import Warehouse, Produit, Cheese, Wine, SousTraitant
 
-    # Charger les données JSON depuis le fichier
-    with open('data.json') as f:
-        data = json.load(f)
-
-    warehouses = []
-    for warehouse in data['order_warehouse']:
-        warehouses.append({
-            'warehouse_id': warehouse['warehouse_id'],
-            'address': warehouse['address'],
-            'postal_code': warehouse['postal_code'],
-            'zone': warehouse['zone'],
-        })
-
-    return render(request, 'warehouse_management.html', {'warehouses': warehouses})
 
 def client_management(request):
     if request.method == 'POST':
@@ -575,49 +715,63 @@ import json
 from django.shortcuts import render, redirect
 from django.contrib import messages
 
+import json
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
 def order_management(request):
     if request.method == 'POST':
-        # Récupérer les données du formulaire
+        # Retrieve form data
         order_id = request.POST.get('order_id')
         status = request.POST.get('status')
+        delivery_mode = request.POST.get('delivery_mode')
+        delivery_option = request.POST.get('delivery_option')
 
-        # Mise à jour de la base de données (JSON ou DB)
+        # Update the database (JSON or DB)
         try:
             with open('data.json') as f:
                 data = json.load(f)
 
+            # Find the specific order
             order = next((item for item in data['order_order'] if item['order_id'] == int(order_id)), None)
             if order:
+                # Update the fields
                 order['status'] = status
+                order['delivery_mode'] = delivery_mode
+                order['delivery_option'] = delivery_option
                 
-                # Sauvegarder les modifications dans le fichier
+                # Save the updated data to the file
                 with open('data.json', 'w') as f:
-                    json.dump(data, f)
-                    
-                messages.success(request, 'Commande mise à jour avec succès.')
+                    json.dump(data, f, indent=4)
+                
+                messages.success(request, 'Order updated successfully.')
             else:
-                messages.error(request, 'Commande non trouvée.')
+                messages.error(request, 'Order not found.')
 
         except Exception as e:
-            messages.error(request, f'Erreur lors de la mise à jour: {e}')
+            messages.error(request, f'Error while updating order: {e}')
 
-        return redirect('order_management')  # Rediriger vers la page après modification
+        return redirect('order_management')  # Redirect to the page after modification
 
-    # Charger les données JSON depuis le fichier
-    with open('data.json') as f:
-        data = json.load(f)
+    # Load the JSON data from the file
+    try:
+        with open('data.json') as f:
+            data = json.load(f)
+    except Exception as e:
+        messages.error(request, f'Error loading data: {e}')
+        return render(request, 'order_management.html', {'orders': []})
 
-    # Créer une liste des commandes avec leurs détails
+    # Create a list of orders with their details
     orders = []
-    for order in data['order_order']:
+    for order in data.get('order_order', []):
         order_id = order['order_id']
-        details = [detail for detail in data['order_orderdetail'] if detail['order_id'] == order_id]
+        details = [detail for detail in data.get('order_orderdetail', []) if detail['order_id'] == order_id]
 
-        # Ajouter les informations des produits
+        # Add product information
         products_info = []
         for detail in details:
             product_id = detail['product_id']
-            product = next((item for item in data['order_fiche_produit'] if item['product_id'] == product_id), None)
+            product = next((item for item in data.get('order_fiche_produit', []) if item['product_id'] == product_id), None)
             if product:
                 products_info.append({
                     'product_id': product_id,
@@ -630,11 +784,14 @@ def order_management(request):
             'order_date': order['order_date'],
             'delivery_date': order['delivery_date'],
             'delivery_address': order['delivery_address'],
+            'delivery_option': order['delivery_option'],
             'status': order['status'],
+            'delivery_mode': order['delivery_mode'],
             'products': products_info,
         })
 
     return render(request, 'order_management.html', {'orders': orders})
+
 
 
 def calculate_total_price(cartItems, delivery_option):
@@ -802,6 +959,392 @@ def account(request):
         'user_email': user_email, 
         'user_info': user_info, 
         'user_orders': user_orders
+    })
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+from django.shortcuts import render
+from django.db.models import Sum, F, Count
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct
+
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct, Warehouse
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct, Warehouse
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct, Warehouse
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct, Warehouse
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct, Warehouse
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct, Warehouse
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct, Warehouse
+import plotly.graph_objects as go
+from django.shortcuts import render
+from .models import OrderStockProduct, Cheese, Wine, Warehouse, Produit
+
+import plotly.graph_objects as go
+from django.shortcuts import render
+from django.db.models import Sum, F
+from .models import OrderDetail, Cheese, Wine, Produit, OrderStockProduct, Warehouse
+
+from django.shortcuts import render
+from django.db.models import Sum, F
+from order.models import (
+    OrderHistoriqueVentes, ProduitOrderHistorique, Produit, Client
+)
+import plotly.graph_objects as go
+from django.db.models import Sum, F
+from django.shortcuts import render
+import plotly.graph_objects as go
+from django.db.models import Sum, F
+from django.shortcuts import render
+import plotly.graph_objects as go
+from .models import OrderHistoriqueVentes, ProduitOrderHistorique, Cheese, Wine, Produit
+from django.db.models import Sum, F
+from .models import ProduitOrderHistorique, Cheese, Wine
+from django.db.models import Sum, F
+from .models import OrderDetail, ProduitOrderHistorique, Cheese, Wine, Produit
+import plotly.graph_objects as go
+
+from django.db.models import Sum, F
+from django.shortcuts import render
+from .models import OrderDetail, ProduitOrderHistorique, Cheese, Wine, Produit
+import plotly.graph_objs as go
+from django.db.models import Sum, F
+from django.shortcuts import render
+from .models import ProduitOrderHistorique, Cheese, Wine, Produit
+import plotly.graph_objs as go
+from django.db.models import Sum, F
+from django.shortcuts import render
+import plotly.graph_objs as go
+from .models import OrderHistoriqueVentes, ProduitOrderHistorique, Produit, Cheese, Wine
+import plotly.express as px
+
+
+from django.db.models import Sum, F
+from django.shortcuts import render
+import plotly.graph_objs as go
+from .models import OrderHistoriqueVentes, ProduitOrderHistorique, Produit, Cheese, Wine
+import plotly.express as px
+
+from django.db.models import Sum, F
+import plotly.graph_objs as go
+from django.shortcuts import render
+from .models import OrderHistoriqueVentes, ProduitOrderHistorique, Client
+from django.db.models import Sum, F
+import plotly.graph_objs as go
+from django.shortcuts import render
+from .models import OrderHistoriqueVentes, ProduitOrderHistorique, Client, Produit, Cheese, Wine
+
+def statistics_view(request):
+    # Chiffre d'affaires par produit (Fromages)
+    cheese_revenue = ProduitOrderHistorique.objects.filter(produits_id__in=Cheese.objects.values('product_id'))
+    cheese_revenue = cheese_revenue.values('produits_id').annotate(
+        total_revenue=Sum(F('quantite') * F('produits_id__cheese__price_per_kg'))
+    )
+    
+    # Chiffre d'affaire par produit (Vins)
+    wine_revenue = ProduitOrderHistorique.objects.filter(produits_id__in=Wine.objects.values('product_id'))
+    wine_revenue = wine_revenue.values('produits_id').annotate(
+        total_revenue=Sum(F('quantite') * F('produits_id__wine__price_per_bottle'))
+    )
+    
+    # Stocks disponibles par produit
+    stock_data = OrderStockProduct.objects.all().values('product__product_id').annotate(total_stock=Sum('stock'))
+
+    # Graphique pour le chiffre d'affaires
+    product_names = []
+    product_revenues = []
+
+    # Pour Fromages (Récupérer le nom du produit via Cheese)
+    for revenue in list(cheese_revenue):
+        product_name = Cheese.objects.get(product_id=revenue['produits_id']).name  # Get the cheese name from Cheese table
+        total_revenue = revenue['total_revenue']
+        product_names.append(product_name)
+        product_revenues.append(total_revenue)
+
+    # Pour Vins (Récupérer le nom du produit via Wine)
+    for revenue in list(wine_revenue):
+        product_name = Wine.objects.get(product_id=revenue['produits_id']).name  # Get the wine name from Wine table
+        total_revenue = revenue['total_revenue']
+        product_names.append(product_name)
+        product_revenues.append(total_revenue)
+
+    # Graphique en barres pour le Chiffre d'Affaires
+    fig_revenue = go.Figure(data=[go.Bar(x=product_names, y=product_revenues, name='Chiffre d\'affaires')])
+    fig_revenue.update_layout(title='Chiffre d\'affaires par produit', xaxis_title='Produit', yaxis_title='Chiffre d\'affaires')
+
+    # Graphique pour les stocks
+    product_names_stock = []
+    product_stocks = []
+
+    # Pour chaque produit dans les stocks
+    for stock in stock_data:
+        # Récupérer le nom du produit depuis la table Cheese ou Wine
+        try:
+            product_name = Cheese.objects.get(product_id=stock['product__product_id']).name  # Cheese table
+        except Cheese.DoesNotExist:
+            try:
+                product_name = Wine.objects.get(product_id=stock['product__product_id']).name  # Wine table
+            except Wine.DoesNotExist:
+                product_name = Produit.objects.get(product_id=stock['product__product_id']).__str__()  # Fallback to Produit table
+
+        total_stock = stock['total_stock']
+        product_names_stock.append(product_name)
+        product_stocks.append(total_stock)
+
+    # Graphique en barres pour le Stock disponible
+    fig_stock = go.Figure(data=[go.Bar(x=product_names_stock, y=product_stocks, name='Stock')])
+    fig_stock.update_layout(title='Stocks disponibles par produit', xaxis_title='Produit', yaxis_title='Stock')
+
+    # Chiffre d'affaire au cours du temps (par date)
+    revenue_by_date = ProduitOrderHistorique.objects.values('historiqueventes_id__date').annotate(
+        total_revenue=Sum( F('amount'))
+    ).order_by('historiqueventes_id__date')
+
+    dates = [entry['historiqueventes_id__date'] for entry in revenue_by_date]
+    revenues = [entry['total_revenue'] for entry in revenue_by_date]
+
+    # Graphique linéaire pour le chiffre d'affaires au fil du temps
+    fig_line = go.Figure(data=[go.Scatter(x=dates, y=revenues, mode='lines', name='Chiffre d\'affaires par Date')])
+    fig_line.update_layout(
+        title='Chiffre d\'affaires au fil du temps',
+        xaxis_title='Date',
+        yaxis_title='Chiffre d\'affaires'
+    )
+
+    # Graphique circulaire (camembert) pour la Répartition des Stocks
+    fig_pie = go.Figure(data=[go.Pie(labels=product_names_stock, values=product_stocks, hole=0.3)])
+    fig_pie.update_layout(title='Répartition des Stocks par Produit')
+     # Répartition des stocks par entrepôt et produit
+    stock_data_warehouse = OrderStockProduct.objects.all()
+
+    warehouse_names = []
+    product_names_warehouse = []
+    stock_values_warehouse = []
+
+    # Remplir les données pour le graphique de stocks par entrepôt et produit
+    for stock in stock_data_warehouse:
+        warehouse = Warehouse.objects.get(warehouse_id=stock.warehouse_id)
+        product = Produit.objects.get(product_id=stock.product_id)
+
+        # Ajouter l'entrepôt
+        warehouse_names.append(warehouse.address)
+
+        # Essayer de récupérer le nom du produit dans les tables Cheese, Wine, ou Produit
+        try:
+            # Essayer d'abord de récupérer le produit dans la table Cheese
+            product_name = Cheese.objects.get(product_id=stock.product_id).name
+        except Cheese.DoesNotExist:
+            try:
+                # Si le produit n'est pas trouvé dans Cheese, essayer dans la table Wine
+                product_name = Wine.objects.get(product_id=stock.product_id).name
+            except Wine.DoesNotExist:
+                # Si le produit n'est trouvé ni dans Cheese ni dans Wine, le récupérer dans la table Produit
+                product_name = Produit.objects.get(product_id=stock.product_id).__str__()
+
+        product_names_warehouse.append(product_name)  # Nom du produit
+        stock_values_warehouse.append(stock.stock)  # Valeur du stock pour ce produit dans l'entrepôt
+
+    # Créer le graphique à barres pour la répartition des stocks par entrepôt et produit
+    fig_warehouse_stock = go.Figure()
+
+    # Obtenez les entrepôts uniques et produits uniques
+    unique_warehouse_names = list(set(warehouse_names))  # Obtenir les entrepôts uniques
+    unique_product_names = list(set(product_names_warehouse))  # Obtenir les produits uniques
+
+    # Créer un dictionnaire pour stocker les valeurs des produits pour chaque entrepôt
+    warehouse_product_stock = {warehouse: [] for warehouse in unique_warehouse_names}
+
+    # Organiser les stocks par entrepôt et produit
+    for warehouse in unique_warehouse_names:
+        for product in unique_product_names:
+            stock_value = sum(
+                [stock_values_warehouse[i] for i in range(len(warehouse_names))
+                 if warehouse_names[i] == warehouse and product_names_warehouse[i] == product]
+            )
+            warehouse_product_stock[warehouse].append(stock_value)
+
+    # Ajouter chaque produit dans le graphique
+    for i, product_name in enumerate(unique_product_names):
+        fig_warehouse_stock.add_trace(go.Bar(
+            x=unique_warehouse_names,
+            y=[warehouse_product_stock[warehouse][i] for warehouse in unique_warehouse_names],
+            name=product_name,
+            hoverinfo='x+y+name',  # Afficher les informations au survol
+        ))
+
+    # Améliorer la lisibilité du graphique
+    fig_warehouse_stock.update_layout(
+        title='Répartition des Stocks par Entrepôt et Produit',
+        xaxis_title='Entrepôt',
+        yaxis_title='Stock',
+        barmode='stack',  # Barres empilées pour afficher plusieurs produits par entrepôt
+        xaxis_tickangle=45,  # Rotation des étiquettes de l'axe X pour les rendre plus lisibles
+        plot_bgcolor='rgba(240, 240, 240, 0.9)',  # Couleur de fond pour le graphique
+        margin=dict(l=40, r=40, t=40, b=100),  # Ajuster les marges pour une meilleure lisibilité
+        height=500,  # Ajuster la hauteur du graphique pour le rendre plus lisible
+    )
+
+    # Ventes par client
+    client_revenue = ProduitOrderHistorique.objects.values('historiqueventes_id__client_email').annotate(
+        total_revenue=Sum(F('quantite') * F('amount'))
+    )
+
+    client_names = []
+    client_revenues = []
+
+    # Pour chaque client, récupérer les ventes
+    for client in list(client_revenue):
+        client_email = OrderHistoriqueVentes.objects.get(id=client['historiqueventes_id__client_email']).client_email.email  # Get the email of the client
+        total_revenue = client['total_revenue']
+        client_names.append(client_email)
+        client_revenues.append(total_revenue)
+
+    # Graphique des ventes par client (barres)
+    fig_client_revenue = go.Figure(data=[go.Bar(x=client_names, y=client_revenues, name='Ventes par Client')])
+    fig_client_revenue.update_layout(
+        title='Ventes par Client',
+        xaxis_title='Client',
+        yaxis_title='Chiffre d\'Affaires'
+    )
+
+    # Quantité vendue par produit (Graphique circulaire)
+    quantity_sold_by_product = ProduitOrderHistorique.objects.values('produits_id').annotate(
+        total_quantity=Sum('quantite')
+    )
+
+    product_names_quantity = []
+    product_quantities = []
+
+    # Pour chaque produit, récupérer la quantité vendue
+    for product in list(quantity_sold_by_product):
+        # Récupérer le nom du produit depuis Cheese ou Wine en fonction de l'ID du produit
+        try:
+            # Essayer d'abord de récupérer le produit dans la table Cheese
+            product_name = Cheese.objects.get(product_id=product['produits_id']).name
+        except Cheese.DoesNotExist:
+            try:
+                # Si le produit n'est pas trouvé dans Cheese, essayer dans la table Wine
+                product_name = Wine.objects.get(product_id=product['produits_id']).name
+            except Wine.DoesNotExist:
+                # Si le produit n'est trouvé ni dans Cheese ni dans Wine, le récupérer depuis la table Produit
+                product_name = Produit.objects.get(product_id=product['produits_id']).__str__()
+
+        total_quantity = product['total_quantity']
+        product_names_quantity.append(product_name)
+        product_quantities.append(total_quantity)
+
+    # Graphique circulaire (camembert) pour la quantité vendue par produit
+    fig_quantity_pie = go.Figure(data=[go.Pie(labels=product_names_quantity, values=product_quantities, hole=0.3)])
+    fig_quantity_pie.update_layout(title='Quantité vendue par Produit')
+    # Récupérer l'historique des ventes
+    historique_sales = []
+
+    # Récupérer toutes les ventes et leurs détails
+    ventes = ProduitOrderHistorique.objects.select_related('historiqueventes_id', 'produits_id').all()
+
+    for vente in ventes:
+        # Récupérer les détails du produit et du client
+        client_email = vente.historiqueventes_id.client_email.email
+        quantite = vente.quantite
+        total_price = vente.amount
+        product_id = vente.produits_id.product_id
+
+        # Récupérer le nom du produit à partir de Cheese, Wine, ou Produit
+        try:
+            # Vérifier si le produit est dans la table Cheese
+            product_name = Cheese.objects.get(product_id=product_id).name
+        except Cheese.DoesNotExist:
+            try:
+                # Vérifier si le produit est dans la table Wine
+                product_name = Wine.objects.get(product_id=product_id).name
+            except Wine.DoesNotExist:
+                # Si le produit n'est pas trouvé dans Cheese ni Wine, le récupérer dans la table Produit
+                product_name = Produit.objects.get(product_id=product_id).__str__()
+
+        # Ajouter les données à l'historique des ventes
+        sale_data = {
+            'date': vente.historiqueventes_id.date,
+            'client_email': client_email,
+            'product_name': product_name,
+            'quantite': quantite,
+            'total_price': total_price
+        }
+        historique_sales.append(sale_data)
+
+
+    # Convertir les graphiques Plotly en HTML
+    revenue_graph = fig_revenue.to_html(full_html=False)
+    stock_graph = fig_stock.to_html(full_html=False)
+    line_graph = fig_line.to_html(full_html=False)
+    pie_graph = fig_pie.to_html(full_html=False)
+    
+    warehouse_stock_graph = fig_warehouse_stock.to_html(full_html=False)
+    client_revenue_graph = fig_client_revenue.to_html(full_html=False)
+    quantity_pie_graph = fig_quantity_pie.to_html(full_html=False)
+
+    # Passer les données et graphiques au template
+    return render(request, 'statistics_view.html', {
+        'historique_sales': historique_sales,
+        'revenue_graph': revenue_graph,
+        'stock_graph': stock_graph,
+        'line_graph': line_graph,
+        'pie_graph': pie_graph,
+        'warehouse_stock_graph': warehouse_stock_graph,
+        'client_revenue_graph': client_revenue_graph,
+        'quantity_pie_graph': quantity_pie_graph,  # Ajouter le graphique de la quantité vendue
     })
 
 def contact(request):

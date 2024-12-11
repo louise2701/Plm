@@ -3,7 +3,7 @@ from django.db import transaction
 from order.models import (
     Client, Order, Produit, Cheese, Wine,
     OrderDetail, Warehouse, Production,
-    SousTraitant, Employe, Fournisseur, Planning,ProduitPreparation
+    SousTraitant, Employe, Fournisseur, Planning,ProduitPreparation,OrderStockProduct,OrderHistoriqueVentes, ProduitOrderHistorique
 )
 import json
 
@@ -29,6 +29,9 @@ class Command(BaseCommand):
         self.load_data(ProduitPreparation, data.get('ProduitPreparation', []))
         self.load_data(Production, data.get('order_production', []))
         self.load_data(SousTraitant, data.get('order_sous_traitants', []))
+        self.load_data(OrderStockProduct, data.get('order_stockProduct', []))
+        self.load_data(OrderHistoriqueVentes, data.get('order_historiqueventes', []))
+        self.load_data(ProduitOrderHistorique, data.get('order_produithistoriqueventes', []))
 
     @transaction.atomic
     def load_data(self, model, data_list):
@@ -45,6 +48,9 @@ class Command(BaseCommand):
             'SousTraitant': 'sous_traitant_id',
             'Employe': 'employe_id',
             'Fournisseur': 'fournisseur_id',
+            'OrderStockProduct': 'stockproduct_id',
+            'OrderHistoriqueVentes': 'id',
+            'ProduitOrderHistorique': 'id',
         }
 
         model_name = model.__name__
@@ -64,12 +70,12 @@ class Command(BaseCommand):
             if entry.get(unique_field) not in existing_ids:
                 # Gérer les relations de clé étrangère
                 if model_name == 'Order':
-                    client_email = entry.get('email_id')
-                    if client_email:
+                    email = entry.get('email_id')
+                    if email:
                         try:
-                            entry['email_id'] = Client.objects.get(email=client_email)
+                            entry['email_id'] = Client.objects.get(email=email)
                         except Client.DoesNotExist:
-                            self.stdout.write(self.style.ERROR(f'Client with email {client_email} does not exist'))
+                            self.stdout.write(self.style.ERROR(f'Client with email {email} does not exist'))
                             continue
 
                 if model_name in ['Cheese', 'Wine']:
@@ -166,6 +172,55 @@ class Command(BaseCommand):
                         except Produit.DoesNotExist:
                             self.stdout.write(self.style.ERROR(f'Produit with ID {product_id} does not exist'))
                             continue
+                
+                if model_name == 'OrderStockProduct':                            
+                        # Ici, on charge les relations entre entrepôts, produits, et stocks
+                        product_id = entry.get('product_id')
+                        if product_id:
+                            try:
+                                entry['product_id'] = Produit.objects.get(product_id=product_id).product_id
+                            except Produit.DoesNotExist:
+                                self.stdout.write(self.style.ERROR(f'Produit with ID {product_id} does not exist'))
+                                continue
+
+                        warehouse_id = entry.get('warehouse_id')
+                        if warehouse_id:
+                            try:
+                                entry['warehouse_id'] = Warehouse.objects.get(warehouse_id=warehouse_id).warehouse_id
+                            except Warehouse.DoesNotExist:
+                                self.stdout.write(self.style.ERROR(f'Warehouse with ID {warehouse_id} does not exist'))
+                                continue
+                            
+                if model_name == 'OrderHistoriqueVentes':
+                    client_email = entry.get('client_email')
+                    if client_email:
+                        try:
+                            # Récupérer le client par son email
+                            entry['client_email'] = Client.objects.get(email=client_email)
+                        except Client.DoesNotExist:
+                            self.stdout.write(self.style.ERROR(f'Client with email {client_email} does not exist'))
+                            continue
+                
+                
+                if model_name == 'ProduitOrderHistorique':
+                    historiqueventes_id = entry.get('historiqueventes_id')
+                    if historiqueventes_id:
+                        try:
+                            # Récupérer le client par son email
+                            entry['historiqueventes_id'] = OrderHistoriqueVentes.objects.get(id=historiqueventes_id)
+                        except OrderHistoriqueVentes.DoesNotExist:
+                            self.stdout.write(self.style.ERROR(f'Client with email {historiqueventes_id} does not exist'))
+                            continue
+                        
+                    produits_id = entry.get('produits_id')
+                    if produits_id:
+                        try:
+                            # Récupérer le client par son email
+                            entry['produits_id'] = Produit.objects.get(product_id=produits_id)
+                        except Produit.DoesNotExist:
+                            self.stdout.write(self.style.ERROR(f'Client with email {produits_id} does not exist'))
+                            continue
+
 
                 new_entries.append(model(**entry))
 
