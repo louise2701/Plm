@@ -2,6 +2,7 @@
 cd "repertoire ou se situe le projet"
 
 python create_database.py
+python manage.py makemigrations
 
 python manage.py migrate
 
