@@ -16,8 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-
+from order.views import unauthorized_view,home,login,confirm_order
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("order/", include("order.urls")),
+    path('login/', login, name='login'),  # Page de connexion
+    path('', home, name='home'),  # Page d'accueil (restreinte aux utilisateurs connectés)
+]
+
+ # Import de la vue
+
+urlpatterns += [
+    path('unauthorized/', unauthorized_view, name='unauthorized'),  # Nouvelle route
+    path('confirm_order/', confirm_order, name='confirm_order'),
 ]

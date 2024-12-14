@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Page Protégée</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}"> <!-- Optionnel : pour vos styles -->
+</head>
+<body>
+    <header>
+        <h1>Bienvenue sur la Page Protégée</h1>
+    </header>
+    <main>
+        <p>Vous êtes connecté et avez accès à cette page.</p>
+        <a href="{% url 'home' %}">Retour à l'accueil</a>
+        <a href="{% url 'logout' %}">Déconnexion</a> <!-- Si vous ajoutez une vue pour la déconnexion -->
+    </main>
+    <footer>
+        <p>&copy; 2024 Fromagerie. Tous droits réservés.</p>
+    </footer>
+</body>
+</html>

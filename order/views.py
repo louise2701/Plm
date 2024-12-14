@@ -9,10 +9,14 @@ import datetime
 
 def home(request):
     user_email = request.COOKIES.get('email', None)
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     return render(request, 'home.html', {'user_email': user_email})
 
 def produces(request):
     user_email = request.COOKIES.get('email', None)
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     products_table = Produit.objects.all()
 
     products = []
@@ -30,15 +34,26 @@ def produces(request):
 
 def order_infos(request):
     user_email = request.COOKIES.get('email', None)
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
 
     if user_email is not None:
-        user_info = Client.objects.get(email=user_email)
+        user_info = Employe.objects.get(contact__email=user_email)
         return render(request, 'order_infos.html', {'user_email': user_email, 'user_info': user_info})
     else:
         response = redirect('login')
         response.set_cookie('order_infos', True)
         return response
+
+
+    
 def employees(request):
+    access_level = request.COOKIES.get('access_level')
+    if access_level != 'admin':  # Seuls les admins peuvent accéder
+        return redirect('unauthorized')
+    elif not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
+    
     user_email = request.COOKIES.get('email', None)
 
     # Gérer la modification d'un employé
@@ -101,6 +116,8 @@ from django.contrib import messages
 from .models import SousTraitant  # Assurez-vous d'importer votre modèle SousTraitant
 
 def sous_traitants(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     # Récupérer tous les sous-traitants
     sous_traitants_list = SousTraitant.objects.all()
 
@@ -167,6 +184,12 @@ from django.contrib import messages
 from .models import Planning, Employe, Produit  # Assurez-vous que les modèles sont importés
 
 def planning(request):
+
+    access_level = request.COOKIES.get('access_level')
+    if access_level != 'admin':  # Seuls les admins peuvent accéder
+        return redirect('unauthorized')
+    elif not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     # Récupérer tous les plannings
     planning_list = Planning.objects.all()
 
@@ -239,6 +262,8 @@ from .models import Production, Produit, Planning
 import json
 
 def production(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     if request.method == 'POST':
         # Action de création ou de modification
         production_id = request.POST.get('production_id')
@@ -351,6 +376,8 @@ from .models import Warehouse, Produit, OrderStockProduct, Cheese, Wine, SousTra
 from django.db.models import Q
 
 def warehouse_management(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     # Collect search filters from GET request
     location_filter = request.GET.get('location', '')
     product_filter = request.GET.get('product', '')
@@ -450,6 +477,8 @@ def warehouse_management(request):
     return render(request, 'warehouse_management.html', {'warehouse_data': warehouse_data, 'products': products})
 
 def stock_management(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     if request.method == 'POST':
         product_id = request.POST.get('product_id')
         action = request.POST.get('action')
@@ -481,6 +510,8 @@ def stock_management(request):
 from django.db.models import Q
 
 def fournisseurs(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     # Récupérer tous les fournisseurs
     fournisseurs_list = Fournisseur.objects.all()
 
@@ -570,6 +601,8 @@ import json
 import os
 
 def catalog_management(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     # Chemin vers le fichier JSON
     json_file_path = 'data.json'
 
@@ -668,6 +701,8 @@ from .models import Warehouse, Produit, Cheese, Wine, SousTraitant
 
 
 def client_management(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     if request.method == 'POST':
         # Récupérer les données du formulaire
         email = request.POST.get('email')
@@ -720,6 +755,8 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 
 def order_management(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     if request.method == 'POST':
         # Retrieve form data
         order_id = request.POST.get('order_id')
@@ -808,6 +845,8 @@ def calculate_total_price(cartItems, delivery_option):
     return total_price
 
 def confirm_order(request):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     if 'confirm' in request.POST:
         user_email = request.COOKIES.get('email', None)
         cartItems = json.loads(request.POST.get('cartItems'))
@@ -851,6 +890,8 @@ def confirm_order(request):
     return redirect('order_infos')
 
 def order_confirmed(request, order_id):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     user_email = request.COOKIES.get('email', None)
 
     stored_order_date_timestamp = request.session.get('order_date')
@@ -869,6 +910,8 @@ def order_confirmed(request, order_id):
     })
 
 def order_history(request, order_id):
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     user_email = request.COOKIES.get('email', None)
     order = Order.objects.get(order_id=order_id)
     order_details = OrderDetail.objects.filter(order=order)
@@ -895,7 +938,7 @@ def order_history(request, order_id):
         'cartItems': products
     })
 
-def login(request):
+'''def login(request):
     if 'login_submit' in request.POST:
         email = request.POST.get('email')
         password = request.POST.get('password')
@@ -908,7 +951,44 @@ def login(request):
             response.set_cookie('email', email)
             return response
 
+    return render(request, 'login.html')'''
+def login(request):
+    ADMIN_EMAIL = 'lucie.martin@fromagerie.fr'
+    EMPLOYEE_EMAILS = [
+        'pierre.dubois@fromagerie.fr',
+        'marie.lefevre@fromagerie.fr',
+        'hans.muller@fromagerie.ch',
+        'giulia.rossi@fromagerie.it',
+        'john.smith@fromagerie.uk'
+    ]
+        # Vérifie si l'utilisateur est déjà connecté
+    if request.COOKIES.get('email') and request.COOKIES.get('access_level'):
+        return redirect('home.html')
+
+    if 'login_submit' in request.POST:
+        email = request.POST.get('email')
+        password = request.POST.get('password')
+
+        user = Employe.objects.filter(contact__email=email, mdp=password).first()
+        if not user:
+            return render(request, 'login.html', {'error': 'Email ou mot de passe incorrect.'})
+        
+        # Déterminer les droits d'accès
+        if email == ADMIN_EMAIL:
+            accessible_pages = 'admin'
+        elif email in EMPLOYEE_EMAILS:
+            accessible_pages = 'employee'
+        else:
+            return render(request, 'login.html', {'error': 'Vous n\'avez pas les droits pour accéder à ce site.'})
+
+        # Définir un cookie pour les autorisations
+        response = redirect('home')
+        response.set_cookie('email', email)
+        response.set_cookie('access_level', accessible_pages)  # Stocker le niveau d'accès
+        return response
+
     return render(request, 'login.html')
+
 
 def signin(request):
     if 'signin_submit' in request.POST:
@@ -929,7 +1009,7 @@ def signin(request):
 
 def account(request):
     user_email = request.COOKIES.get('email', None)
-    user_info = Client.objects.get(email=user_email)
+    user_info = Employe.objects.get(contact__email=user_email)
     user_orders = Order.objects.filter(email_id=user_email)
 
     if 'modify_user_info' in request.POST:
@@ -960,6 +1040,9 @@ def account(request):
         'user_info': user_info, 
         'user_orders': user_orders
     })
+def unauthorized_view(request):
+    return render(request, 'unauthorized.html', {'message': 'Vous n\'avez pas les droits pour accéder à cette page.'})
+
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
@@ -1088,6 +1171,12 @@ from django.shortcuts import render
 from .models import OrderHistoriqueVentes, ProduitOrderHistorique, Client, Produit, Cheese, Wine
 
 def statistics_view(request):
+    access_level = request.COOKIES.get('access_level')
+    if access_level != 'admin':  # Seuls les admins peuvent accéder
+        return redirect('unauthorized')
+    elif not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
+    
     # Chiffre d'affaires par produit (Fromages)
     cheese_revenue = ProduitOrderHistorique.objects.filter(produits_id__in=Cheese.objects.values('product_id'))
     cheese_revenue = cheese_revenue.values('produits_id').annotate(
