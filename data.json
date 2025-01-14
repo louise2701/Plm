@@ -26,7 +26,7 @@
             "first_name": "Jane",
             "last_name": "Smith",
             "phone_number": "9876543210",
-            "address": "456 Avenue des \u00c9toiles",
+            "address": "456 Avenue des \u00e9toiles",
             "postal_code": "75002",
             "registered_credit_card": "1234567891234567"
         },
@@ -46,7 +46,7 @@
             "first_name": "Carrefour",
             "last_name": "Group",
             "phone_number": "0141042600",
-            "address": "33 avenue \u00c9mile Zola",
+            "address": "33 avenue \u00e9mile Zola",
             "postal_code": "92100",
             "registered_credit_card": "9876543210987654"
         },
@@ -130,7 +130,7 @@
             "order_date": "2023-01-05",
             "delivery_date": "2023-01-07",
             "delivery_option": "Standard",
-            "delivery_address": "456 Avenue des \u00c3\u2030toiles",
+            "delivery_address": "456 Avenue des \u00e9toiles",
             "delivery_postal_code": "75002",
             "status": "Delivered",
             "delivery_mode": "Ship",
@@ -221,7 +221,7 @@
             "order_date": "2023-01-28",
             "delivery_date": "2023-01-30",
             "delivery_option": "Express",
-            "delivery_address": "456 Avenue des \u00c9toiles",
+            "delivery_address": "456 Avenue des \u00e9toiles",
             "delivery_postal_code": "75002",
             "status": "Pending",
             "delivery_mode": "Train",
@@ -234,7 +234,7 @@
             "order_date": "2023-01-31",
             "delivery_date": "2023-02-02",
             "delivery_option": "Standard",
-            "delivery_address": "456 Avenue des \u00c9toiles",
+            "delivery_address": "456 Avenue des \u00e9toiles",
             "delivery_postal_code": "75002",
             "status": "Delivered",
             "delivery_mode": "Train",
@@ -247,7 +247,7 @@
             "order_date": "2023-02-03",
             "delivery_date": "2023-02-05",
             "delivery_option": "Express",
-            "delivery_address": "456 Avenue des \u00c9toiles",
+            "delivery_address": "456 Avenue des \u00e9toiles",
             "delivery_postal_code": "75002",
             "status": "Delivered",
             "delivery_mode": "Train",
@@ -299,7 +299,7 @@
             "order_date": "2023-02-15",
             "delivery_date": "2023-02-17",
             "delivery_option": "Express",
-            "delivery_address": "33 avenue \u00c9mile Zola",
+            "delivery_address": "33 avenue \u00e9mile Zola",
             "delivery_postal_code": "92100",
             "status": "Pending",
             "delivery_mode": "Train",
@@ -312,7 +312,7 @@
             "order_date": "2023-02-18",
             "delivery_date": "2023-02-20",
             "delivery_option": "Standard",
-            "delivery_address": "33 avenue \u00c9mile Zola",
+            "delivery_address": "33 avenue \u00e9mile Zola",
             "delivery_postal_code": "92100",
             "status": "Delivered",
             "delivery_mode": "Train",
@@ -325,7 +325,7 @@
             "order_date": "2023-02-21",
             "delivery_date": "2023-02-23",
             "delivery_option": "Express",
-            "delivery_address": "33 avenue \u00c9mile Zola",
+            "delivery_address": "33 avenue \u00e9mile Zola",
             "delivery_postal_code": "92100",
             "status": "Delivered",
             "delivery_mode": "Train",
@@ -607,43 +607,45 @@
             "nom": "Camembert standard",
             "ingredients": [
                 "Lait de vache",
-                "Sel",
-                "Culture de ferments",
-                "Pr\u00c3\u00a9sure"
+                "     Sel",
+                "     Culture de ferments",
+                "     Pr\u00e9sure"
             ],
-            "processus_de_fabrication": "Lait pasteuris\u00c3\u00a9 chauff\u00c3\u00a9, additionn\u00c3\u00a9 de ferments, caillage, moulage, \u00c3\u00a9gouttage, salage, affinage.",
+            "processus_de_fabrication": "Lait pasteuris\u00e9 chauff\u00e9, additionn\u00e9 de ferments, caillage, moulage, \u00e9gouttage, salage, affinage.",
             "specifications": {
-                "poids": "250g",
-                "dur\u00c3\u00a9e_d_affinage": "4 semaines",
-                "type_de_fromage": "P\u00c3\u00a2te molle"
+                "poids": "320g",
+                "dur\u00e9e_d_affinage": "4 semaines",
+                "type_de_fromage": "P\u00e2te molle"
             },
             "version": {
                 "numero_version": 1,
-                "date_modification": "2023-01-15",
-                "modifications": "Recette initiale."
-            }
+                "date_modification": "2025-01-14",
+                "modifications": "Produit modifi\u00e9."
+            },
+            "price": 15.5
         },
         {
             "product_id": 2,
             "reference": "CAM_002",
-            "nom": "Camembert modifi\u00c3\u00a9",
+            "nom": "Camembert modifi\u00e9",
             "ingredients": [
                 "Lait de vache",
-                "Sel",
-                "Culture de ferments",
-                "Pr\u00c3\u00a9sure",
-                "\u00c3\u2030pices"
+                " Sel",
+                "Poivre",
+                " Culture de ferments",
+                " Pr\u00e9sure",
+                " \u00e9pices"
             ],
-            "processus_de_fabrication": "Lait pasteuris\u00c3\u00a9 chauff\u00c3\u00a9, additionn\u00c3\u00a9 de ferments, caillage, moulage, ajout d'\u00c3\u00a9pices, \u00c3\u00a9gouttage, salage, affinage.",
+            "processus_de_fabrication": "Lait pasteuris\u00e9 chauff\u00e9, additionn\u00e9 de ferments, caillage, moulage, ajout d'\u00e9pices, \u00e9gouttage, salage, affinage.",
             "specifications": {
                 "poids": "250g",
-                "dur\u00c3\u00a9e_d_affinage": "5 semaines",
-                "type_de_fromage": "P\u00c3\u00a2te molle"
+                "dur\u00e9e_d_affinage": "5 semaines",
+                "type_de_fromage": "P\u00e2te molle"
             },
             "version": {
                 "numero_version": 1,
-                "date_modification": "2023-02-10",
-                "modifications": "Ajout d'\u00c3\u00a9pices \u00c3\u00a0 la recette."
+                "date_modification": "2025-01-14",
+                "modifications": "Produit modifi\u00e9."
             }
         },
         {
@@ -654,13 +656,13 @@
                 "Lait de vache bio",
                 "Sel",
                 "Culture de ferments",
-                "Pr\u00c3\u00a9sure"
+                "Pr\u00e9sure"
             ],
-            "processus_de_fabrication": "Lait bio pasteuris\u00c3\u00a9 chauff\u00c3\u00a9, additionn\u00c3\u00a9 de ferments, caillage, moulage, \u00c3\u00a9gouttage, salage, affinage.",
+            "processus_de_fabrication": "Lait bio pasteuris\u00e9 chauff\u00e9, additionn\u00e9 de ferments, caillage, moulage, \u00e9gouttage, salage, affinage.",
             "specifications": {
                 "poids": "250g",
-                "dur\u00c3\u00a9e_d_affinage": "6 semaines",
-                "type_de_fromage": "P\u00c3\u00a2te molle"
+                "dur\u00e9e_d_affinage": "6 semaines",
+                "type_de_fromage": "P\u00e2te molle"
             },
             "version": {
                 "numero_version": 1,
@@ -675,13 +677,13 @@
             "ingredients": [
                 "Lait de vache",
                 "Sel",
-                "Pr\u00c3\u00a9sure"
+                "Pr\u00e9sure"
             ],
-            "processus_de_fabrication": "Lait chauff\u00c3\u00a9, additionn\u00c3\u00a9 de ferments, caillage, moulage, affinage.",
+            "processus_de_fabrication": "Lait chauff\u00e9, additionn\u00e9 de ferments, caillage, moulage, affinage.",
             "specifications": {
                 "poids": "1kg",
-                "dur\u00c3\u00a9e_d_affinage": "8 semaines",
-                "type_de_fromage": "P\u00c3\u00a2te press\u00c3\u00a9e cuite"
+                "dur\u00e9e_d_affinage": "8 semaines",
+                "type_de_fromage": "P\u00e2te press\u00e9e cuite"
             },
             "version": {
                 "numero_version": 1,
@@ -692,17 +694,17 @@
         {
             "product_id": 5,
             "reference": "CAM_005",
-            "nom": "Comt\u00c3\u00a9",
+            "nom": "Comt\u00e9",
             "ingredients": [
                 "Lait cru de vache",
                 "Sel",
-                "Pr\u00c3\u00a9sure"
+                "Pr\u00e9sure"
             ],
-            "processus_de_fabrication": "Lait cru chauff\u00c3\u00a9, caillage, moulage, affinage prolong\u00c3\u00a9.",
+            "processus_de_fabrication": "Lait cru chauff\u00e9, caillage, moulage, affinage prolong\u00e9.",
             "specifications": {
                 "poids": "400g",
-                "dur\u00c3\u00a9e_d_affinage": "12 mois",
-                "type_de_fromage": "P\u00c3\u00a2te press\u00c3\u00a9e cuite"
+                "dur\u00e9_d_affinage": "12 mois",
+                "type_de_fromage": "P\u00e2te press\u00e9e cuite"
             },
             "version": {
                 "numero_version": 1,
@@ -717,12 +719,12 @@
             "ingredients": [
                 "Lait de bufflonne",
                 "Sel",
-                "Pr\u00c3\u00a9sure"
+                "Pr\u00e9sure"
             ],
-            "processus_de_fabrication": "Lait chauff\u00c3\u00a9, caillage, \u00c3\u00a9tirage de la p\u00c3\u00a2te, moulage.",
+            "processus_de_fabrication": "Lait chauff\u00e9, caillage, \u00e9tirage de la p\u00e2te, moulage.",
             "specifications": {
                 "poids": "200g",
-                "type_de_fromage": "P\u00c3\u00a2te fil\u00c3\u00a9e"
+                "type_de_fromage": "P\u00e2te fil\u00e9e"
             },
             "version": {
                 "numero_version": 1,
@@ -738,7 +740,7 @@
                 "Raisins rouges",
                 "Sulfites"
             ],
-            "processus_de_fabrication": "Fermentation, vieillissement en f\u00c3\u00bbts de ch\u00c3\u00aane.",
+            "processus_de_fabrication": "Fermentation, vieillissement en f\u00fbts de ch\u00eane.",
             "specifications": {
                 "volume": "750ml",
                 "taux_d_alcool": "14%"
@@ -757,7 +759,7 @@
                 "Raisins blancs",
                 "Sulfites"
             ],
-            "processus_de_fabrication": "Fermentation, vieillissement en f\u00c3\u00bbts de ch\u00c3\u00aane.",
+            "processus_de_fabrication": "Fermentation, vieillissement en f\u00fbts de ch\u00eane.",
             "specifications": {
                 "volume": "750ml",
                 "taux_d_alcool": "13%"
@@ -824,7 +826,7 @@
                 "code_postal": "75001",
                 "pays": "France"
             },
-            "materiel_fournit": "Fromages affin\u00c3\u00a9s",
+            "materiel_fournit": "Fromages affin\u00e9s",
             "usine_livree": "Usine de Maturation des Fromages",
             "prix": 1234.56
         },
@@ -843,12 +845,12 @@
                 "pays": "France"
             },
             "materiel_fournit": "Lait cru AOP",
-            "usine_livree": "Usine de Transformation Laiti\u00c3\u00a8re",
+            "usine_livree": "Usine de Transformation Laiti\u00e8re",
             "prix": 567.89
         },
         {
             "fournisseur_id": 3,
-            "nom": "\u00c3\u2030picerie Fine",
+            "nom": "\u00e9picerie Fine",
             "contact": {
                 "nom_contact": "Paul Martin",
                 "telephone": "+33 1 34 56 78 90",
@@ -860,7 +862,7 @@
                 "code_postal": "13001",
                 "pays": "France"
             },
-            "materiel_fournit": "\u00c3\u2030pices pour affinage",
+            "materiel_fournit": "\u00e9pices pour affinage",
             "usine_livree": "Usine d'Affinage et Conditionnement",
             "prix": 789.01
         },
@@ -868,7 +870,7 @@
             "fournisseur_id": 4,
             "nom": "Cave des Vignobles",
             "contact": {
-                "nom_contact": "Vincent Ch\u00c3\u00aane",
+                "nom_contact": "Vincent Ch\u00eane",
                 "telephone": "+33 1 44 55 66 77",
                 "email": "vincent.chene@cavedesvignobles.fr"
             },
@@ -878,7 +880,7 @@
                 "code_postal": "33000",
                 "pays": "France"
             },
-            "materiel_fournit": "Barriques de ch\u00c3\u00aane",
+            "materiel_fournit": "Barriques de ch\u00eaane",
             "usine_livree": "Chai de Vieillissement",
             "prix": 2000.0
         }
@@ -940,7 +942,7 @@
             },
             "services_fournis": [
                 "Conditionnement",
-                "Gestion des d\u00c3\u00a9chets"
+                "Gestion des d\u00e9chets"
             ],
             "produits_traites": 2
         },
@@ -960,7 +962,7 @@
             },
             "services_fournis": [
                 "Transport international",
-                "Suivi des exp\u00c3\u00a9ditions"
+                "Suivi des exp\u00e9ditions"
             ],
             "produits_traites": 5
         },
@@ -980,7 +982,7 @@
             },
             "services_fournis": [
                 "Affinage",
-                "Stockage r\u00c3\u00a9frig\u00c3\u00a9r\u00c3\u00a9"
+                "Stockage r\u00e9frig\u00e9r\u00e9"
             ],
             "produits_traites": 4
         },
@@ -1024,7 +1026,7 @@
             "competences": [
                 "Gestion de production",
                 "Planification",
-                "Contr\u00c3\u00b4le qualit\u00c3\u00a9"
+                "Contr\u00f4le qualit\u00e9"
             ],
             "mdp": "ALdibidcnz"
         },
@@ -1045,14 +1047,14 @@
             "date_embauche": "2019-03-10",
             "competences": [
                 "Analyse microbiologique",
-                "Contr\u00c3\u00b4le qualit\u00c3\u00a9",
+                "Contr\u00f4le qualit\u00e9",
                 "R&D"
             ],
             "mdp": "123BIZkbsh"
         },
         {
             "employe_id": 3,
-            "nom": "Marie Lef\u00c3\u00a8vre",
+            "nom": "Marie Lef\u00e9vre",
             "poste": "Responsable logistique",
             "contact": {
                 "telephone": "+33 1 45 67 89 12",
@@ -1074,7 +1076,7 @@
         },
         {
             "employe_id": 4,
-            "nom": "Hans M\u00c3\u00bcller",
+            "nom": "Hans Muller",
             "poste": "Chef affineur",
             "contact": {
                 "telephone": "+41 22 345 67 89",
@@ -1089,7 +1091,7 @@
             "date_embauche": "2017-03-15",
             "competences": [
                 "Affinage de fromages",
-                "Contr\u00c3\u00b4le des conditions d'affinage",
+                "Contr\u00f4le des conditions d'affinage",
                 "Connaissances en microbiologie"
             ],
             "mdp": "AffinaGe2023"
@@ -1097,7 +1099,7 @@
         {
             "employe_id": 5,
             "nom": "Giulia Rossi",
-            "poste": "Responsable qualit\u00c3\u00a9",
+            "poste": "Responsable qualit\u00e9",
             "contact": {
                 "telephone": "+39 06 789 1234",
                 "email": "giulia.rossi@fromagerie.it"
@@ -1110,9 +1112,9 @@
             },
             "date_embauche": "2021-02-20",
             "competences": [
-                "Contr\u00c3\u00b4le qualit\u00c3\u00a9",
+                "Contr\u00f4le qualit\u00e9",
                 "Normes HACCP",
-                "Am\u00c3\u00a9lioration continue"
+                "Am\u00e9lioration continue"
             ],
             "mdp": "QUAL2021rome"
         },
@@ -1132,8 +1134,8 @@
             },
             "date_embauche": "2019-11-05",
             "competences": [
-                "Connaissance des \u00c3\u00a9quipements de production",
-                "Maintenance pr\u00c3\u00a9ventive",
+                "Connaissance des \u00e9quipements de production",
+                "Maintenance pr\u00e9ventive",
                 "Optimisation des processus"
             ],
             "mdp": "Tech2023UK"
@@ -1146,7 +1148,7 @@
             "shift": "Matin",
             "employes_assignes": 1,
             "produits_prepares": 2,
-            "commentaires": "Pr\u00c3\u00a9paration pour la vente du week-end."
+            "commentaires": "Pr\u00e9paration pour la vente du week-end."
         },
         {
             "planning_id": 2,
@@ -1154,7 +1156,7 @@
             "shift": "Apres-midi",
             "employes_assignes": 2,
             "produits_prepares": 3,
-            "commentaires": "Contr\u00c3\u00b4le qualit\u00c3\u00a9 des produits bio."
+            "commentaires": "Contr\u00f4 qualit\u00e9 des produits bio."
         }
     ],
     "ProduitPreparation": [
@@ -1177,7 +1179,7 @@
             "product_id": 1,
             "quantite_produite": 100,
             "temps_de_production": "4h",
-            "status": "Termin\u00c3\u00a9",
+            "status": "Termin\u00e9",
             "commentaires": "Production conforme aux normes."
         },
         {
@@ -1187,8 +1189,8 @@
             "product_id": 3,
             "quantite_produite": 75,
             "temps_de_production": "3h",
-            "status": "Termin\u00c3\u00a9",
-            "commentaires": "Produit bio contr\u00c3\u00b4l\u00c3\u00a9 avec succ\u00c3\u00a8s."
+            "status": "Termin\u00e9",
+            "commentaires": "Produit bio contr\u00f4l\u00e9 avec succ\u00e8s."
         }
     ],
     "order_cheese": [

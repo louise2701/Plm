@@ -600,34 +600,46 @@ from django.contrib import messages
 import json
 import os
 
+import json
+from datetime import datetime
+from django.shortcuts import render, redirect
+from django.contrib import messages
+
 def catalog_management(request):
+
+    user_email = request.COOKIES.get('email', None)
     if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
         return redirect('login')
     # Chemin vers le fichier JSON
     json_file_path = 'data.json'
 
-    # Gérer la modification ou la suppression d'un produit
     if request.method == 'POST':
         action = request.POST.get('action')
 
+        # Charger les données depuis le fichier JSON
         with open(json_file_path, 'r') as f:
             data = json.load(f)
 
-        if action == 'add':  # Ajouter un nouveau produit
+        if action == 'add':  # Ajouter un produit
+            category = request.POST.get('category')  # Récupérer la catégorie (cheese ou wine)
+            price = float(request.POST.get('price'))  # Récupérer le prix saisi
+
             new_product = {
-                "product_id": request.POST.get('product_id'),
+                "product_id": int(request.POST.get('product_id')),
                 "reference": request.POST.get('reference'),
                 "nom": request.POST.get('name'),
-                "ingredients": request.POST.get('ingredients').split(','),  # Convertir en liste
+                "ingredients": request.POST.get('ingredients').split(','),
                 "processus_de_fabrication": request.POST.get('manufacturing_process'),
                 "specifications": {
                     "poids": request.POST.get('weight'),
                     "durée_d_affinage": request.POST.get('ripening_duration'),
                     "type_de_fromage": request.POST.get('cheese_type')
                 },
+                "category": category,
+                "price": price,  # Enregistrer le prix directement dans le produit
                 "version": {
                     "numero_version": 1,
-                    "date_modification": "2024-01-01",
+                    "date_modification": datetime.now().strftime("%Y-%m-%d"),
                     "modifications": "Produit ajouté."
                 }
             }
@@ -635,7 +647,9 @@ def catalog_management(request):
             messages.success(request, 'Produit ajouté avec succès.')
 
         elif action == 'edit':  # Modifier un produit existant
-            product_id = request.POST.get('product_id')
+            product_id = int(request.POST.get('product_id'))
+            product_found = False
+
             for product in data['order_fiche_produit']:
                 if product['product_id'] == product_id:
                     product['reference'] = request.POST.get('reference')
@@ -645,13 +659,18 @@ def catalog_management(request):
                     product['specifications']['poids'] = request.POST.get('weight')
                     product['specifications']['durée_d_affinage'] = request.POST.get('ripening_duration')
                     product['specifications']['type_de_fromage'] = request.POST.get('cheese_type')
-                    product['version']['date_modification'] = "2024-01-01"
+                    product['price'] = float(request.POST.get('price'))  # Mettre à jour le prix
+                    product['version']['date_modification'] = datetime.now().strftime("%Y-%m-%d")
                     product['version']['modifications'] = "Produit modifié."
-                    messages.success(request, 'Produit mis à jour avec succès.')
+                    product_found = True
+                    messages.success(request, 'Produit modifié avec succès.')
                     break
 
+            if not product_found:
+                messages.error(request, "Le produit avec l'ID spécifié n'a pas été trouvé.")
+
         elif action == 'delete':  # Supprimer un produit
-            product_id = request.POST.get('product_id')
+            product_id = int(request.POST.get('product_id'))
             data['order_fiche_produit'] = [
                 product for product in data['order_fiche_produit'] if product['product_id'] != product_id
             ]
@@ -661,17 +680,33 @@ def catalog_management(request):
         with open(json_file_path, 'w') as f:
             json.dump(data, f, indent=4)
 
-        return redirect('product_catalog')  # Rediriger vers la page de gestion des produits
+        return redirect('catalog_management')
 
     # Charger les produits existants depuis le fichier JSON
     with open(json_file_path, 'r') as f:
         data = json.load(f)
 
-    products_list = data['order_fiche_produit']  # Récupérer tous les produits
+    # Récupération des prix depuis order_cheese et order_wine
+    cheese_prices = {item['product_id']: item['price_per_kg'] for item in data.get('order_cheese', [])}
+    wine_prices = {item['product_id']: item['price_per_bottle'] for item in data.get('order_wine', [])}
 
-    return render(request, 'catalog_management.html', {
-        'products': products_list
-    })
+    products_list = []
+    for product in data['order_fiche_produit']:
+        product_id = product['product_id']
+        # Utiliser le prix stocké dans le produit ou récupérer depuis cheese/wine
+        price = product.get('price') or cheese_prices.get(product_id) or wine_prices.get(product_id) or 0
+
+        products_list.append({
+            'product_id': product_id,
+            'nom': product['nom'],
+            'price': price,  # Ajouter le prix final
+            'reference': product['reference'],
+            'ingredients': product['ingredients'],
+            'processus_de_fabrication': product['processus_de_fabrication'],
+            'specifications': product['specifications']
+        })
+
+    return render(request, 'catalog_management.html', {'products': products_list})
 
 
 from django.shortcuts import render

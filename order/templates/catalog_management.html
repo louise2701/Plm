@@ -14,60 +14,81 @@
             padding: 0;
             background: url('{% static "pexels-jill-wellington-1638660-39351.jpg" %}') no-repeat center center fixed;
             background-size: cover;
-            color: #A0522D; /* Dark wine color for text */
+            color: #A0522D;
         }
 
         header {
-            background-color: rgba(255, 255, 255, 0.8); /* Light background with transparency */
+            background-color: rgba(255, 255, 255, 0.8);
             padding: 20px;
             text-align: center;
-            border-bottom: 5px solid #FFD700; /* Gold border for distinction */
+            border-bottom: 5px solid #FFD700;
         }
 
         h1 {
             margin: 0;
-            font-size: 2.5em;
+            font-size: 2em;
         }
 
         section {
             padding: 2em;
-            background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent white for section background */
-            margin: 20px; /* Margin for spacing */
-            border-radius: 10px; /* Rounded corners */
-            max-width: 1200px; /* Limit max width */
-            margin: auto; /* Center section */
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Subtle shadow effect */
+            margin: 20px auto;
+            border-radius: 10px;
         }
 
-        table {
-            width: 100%;
-            border-collapse: collapse; /* Combine borders */
-            margin-top: 20px; /* Spacing above the table */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 20px auto;
         }
 
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd; /* Light grey border for table rows */
-        }
-
-        th {
-            background-color: #FFD700; /* Gold background for table header */
-            color: #A0522D; /* Dark wine color for header text */
-        }
-
-        tr:hover {
-            background-color: rgba(255, 215, 0, 0.2); /* Highlight row on hover */
-        }
-
-        footer {
-            background-color: rgba(255, 255, 255, 0.8); /* Light footer background */
+        .grid-item {
+            background-color: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
             text-align: center;
-            padding: 20px;
-            border-top: 5px solid #FFD700; /* Gold border for footer */
-            position: relative;
-            bottom: 0;
-            width: 100%;
+            padding: 15px;
+        }
+
+        .grid-item img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .grid-item h2 {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #A0522D;
+            margin-bottom: 10px;
+        }
+
+        .grid-item .price {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #530171;
+            margin-bottom: 10px;
+        }
+
+        .grid-item button {
+            background-color: #FFD700;
+            color: #A0522D;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 1em;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        .grid-item button:hover {
+            background-color: #A0522D;
+            color: #FFD700;
         }
     </style>
 </head>
@@ -81,7 +102,7 @@
 
     <section>
         <h2>Ajouter un Nouveau Produit</h2>
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <input type="text" name="product_id" placeholder="ID du Produit" required>
             <input type="text" name="reference" placeholder="Référence" required>
@@ -91,60 +112,58 @@
             <input type="text" name="weight" placeholder="Poids" required>
             <input type="text" name="ripening_duration" placeholder="Durée d'affinage" required>
             <input type="text" name="cheese_type" placeholder="Type de fromage" required>
+            <input type="number" name="price" placeholder="Prix (€)" required>
             <input type="hidden" name="action" value="add">
             <button type="submit">Ajouter Produit</button>
         </form>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Nom</th>
-                    <th>Référence</th>
-                    <th>Ingrédients</th>
-                    <th>Processus de fabrication</th>
-                    <th>Poids</th>
-                    <th>Durée d'affinage</th>
-                    <th>Type de fromage</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for product in products %}
-                    <tr>
-                        <td>{{ product.product_id }}</td>
-                        <td>{{ product.nom }}</td>
-                        <td>{{ product.reference }}</td>
-                        <td>{{ product.ingredients|join:", " }}</td>
-                        <td>{{ product.processus_de_fabrication }}</td>
-                        <td>{{ product.specifications.poids }}</td>
-                        <td>{{ product.specifications.durée_d_affinage }}</td>
-                        <td>{{ product.specifications.type_de_fromage }}</td>
-                        <td>
-                            <form method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="product_id" value="{{ product.product_id }}">
-                                <input type="text" name="reference" value="{{ product.reference }}" required>
-                                <input type="text" name="name" value="{{ product.nom }}" required>
-                                <input type="text" name="ingredients" value="{{ product.ingredients|join:', ' }}" required>
-                                <input type="text" name="manufacturing_process" value="{{ product.processus_de_fabrication }}" required>
-                                <input type="text" name="weight" value="{{ product.specifications.poids }}" required>
-                                <input type="text" name="ripening_duration" value="{{ product.specifications.durée_d_affinage }}" required>
-                                <input type="text" name="cheese_type" value="{{ product.specifications.type_de_fromage }}" required>
-                                <input type="hidden" name="action" value="edit">
-                                <button type="submit">Modifier</button>
-                            </form>
-                            <form method="post" style="display:inline;">
-                                {% csrf_token %}
-                                <input type="hidden" name="product_id" value="{{ product.product_id }}">
-                                <input type="hidden" name="action" value="delete">
-                                <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">Supprimer</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+        <h2>Liste des Produits</h2>
+        <div class="grid-container">
+            {% for product in products %}
+                <div class="product grid-item" id="{{ product.nom|lower }}">
+                    <!-- Extraire la première partie du nom pour l'image -->
+                    {% with product.nom.split|first as base_name %}
+                        <img src="{% static base_name|lower|add:'.png' %}" alt="{{ base_name }}">
+                    {% endwith %}
+
+                    <h2>{{ product.nom }}</h2>
+                    <!-- Affichage du prix avec l'ID formaté correctement -->
+                    <p class="price" id="{{ product.nom|lower }}-price">Prix: {{ product.price }} €</p>
+                    <p><strong>Référence :</strong> {{ product.reference }}</p>
+                    <p><strong>Ingrédients :</strong> {{ product.ingredients|join:", " }}</p>
+                    <p><strong>Processus :</strong> {{ product.processus_de_fabrication }}</p>
+                    <p><strong>Poids :</strong> {{ product.specifications.poids }} </p>
+                    <p><strong>Durée d'affinage :</strong> {{ product.specifications.durée_d_affinage }} </p>
+                    <p><strong>Type :</strong> {{ product.specifications.type_de_fromage }}</p>
+
+                    <div class="form-actions">
+                        <!-- Formulaire pour la modification -->
+                        <form method="post" enctype="multipart/form-data" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                            <input type="text" name="reference" value="{{ product.reference }}" required>
+                            <input type="text" name="name" value="{{ product.nom }}" required>
+                            <input type="text" name="ingredients" value="{{ product.ingredients|join:', ' }}" required>
+                            <input type="text" name="manufacturing_process" value="{{ product.processus_de_fabrication }}" required>
+                            <input type="text" name="weight" value="{{ product.specifications.poids }}" required>
+                            <input type="text" name="ripening_duration" value="{{ product.specifications.durée_d_affinage }}" required>
+                            <input type="text" name="cheese_type" value="{{ product.specifications.type_de_fromage }}" required>
+                            <input type="number" name="price" value="{{ product.price }}" step="0.01" required>
+                            <input type="hidden" name="action" value="edit">
+                            <button type="submit">Modifier</button>
+                        </form>
+
+                        <!-- Formulaire pour la suppression -->
+                        <form method="post" style="display:inline;">
+                            {% csrf_token %}
+                            <input type="hidden" name="product_id" value="{{ product.product_id }}">
+                            <input type="hidden" name="action" value="delete">
+                            <button type="submit" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce produit ?');">Supprimer</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
     </section>
 
     <footer>
