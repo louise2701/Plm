@@ -604,12 +604,16 @@ import json
 from datetime import datetime
 from django.shortcuts import render, redirect
 from django.contrib import messages
+import json
+from datetime import datetime
+from django.shortcuts import render, redirect
+from django.contrib import messages
+import json
+from datetime import datetime
+from django.shortcuts import render, redirect
+from django.contrib import messages
 
 def catalog_management(request):
-
-    user_email = request.COOKIES.get('email', None)
-    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
-        return redirect('login')
     # Chemin vers le fichier JSON
     json_file_path = 'data.json'
 
