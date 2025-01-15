@@ -52,7 +52,7 @@ def employees(request):
     if access_level != 'admin':  # Seuls les admins peuvent accéder
         return redirect('unauthorized')
     elif not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
-        return redirect('login')
+        return redirect('home')
     
     user_email = request.COOKIES.get('email', None)
 
@@ -182,16 +182,76 @@ def sous_traitants(request):
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Planning, Employe, Produit  # Assurez-vous que les modèles sont importés
+from django.contrib import messages
+from .models import Planning, Employe, Produit, Cheese, Wine
+import json
+import plotly.express as px
+from datetime import datetime, timedelta
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib import messages
+from .models import Planning, Employe, Produit, Cheese, Wine
 
 def planning(request):
-
     access_level = request.COOKIES.get('access_level')
     if access_level != 'admin':  # Seuls les admins peuvent accéder
         return redirect('unauthorized')
     elif not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
-        return redirect('login')
+        return redirect('home')
     # Récupérer tous les plannings
     planning_list = Planning.objects.all()
+
+    # Ajouter le nom du produit préparé à chaque planning
+    for planning in planning_list:
+        try:
+            # Essayer de récupérer le produit dans la table Cheese
+            product_name = Cheese.objects.get(product_id=planning.produits_prepares_id).name
+        except Cheese.DoesNotExist:
+            try:
+                # Si le produit n'est pas trouvé dans Cheese, essayer dans Wine
+                product_name = Wine.objects.get(product_id=planning.produits_prepares_id).name
+            except Wine.DoesNotExist:
+                # Si le produit n'est trouvé ni dans Cheese ni dans Wine, essayer dans Produit
+                product_name = Produit.objects.get(product_id=planning.produits_prepares_id).__str__()
+
+        # Ajouter dynamiquement le champ virtuel produit_nom
+        planning.produit_nom = product_name
+
+    # Préparer les données pour le diagramme de Gantt
+    gantt_data = []
+    for planning in planning_list:
+        # Définir les horaires de début et de fin selon le shift
+        if planning.shift == 'Matin':
+            start_time = datetime.combine(planning.date, datetime.min.time()) + timedelta(hours=8)  # 08:00
+            end_time = start_time + timedelta(hours=4)  # 12:00
+        elif planning.shift == 'Après-midi':
+            start_time = datetime.combine(planning.date, datetime.min.time()) + timedelta(hours=13)  # 13:00
+            end_time = start_time + timedelta(hours=4)  # 17:00
+        else:  # Nuit
+            start_time = datetime.combine(planning.date, datetime.min.time()) + timedelta(hours=22)  # 22:00
+            end_time = start_time + timedelta(hours=8)  # 06:00 le lendemain
+
+        gantt_data.append({
+            "Employé": planning.employes_assignes.nom,
+            "Produit": planning.produit_nom,
+            "Début": start_time,
+            "Fin": end_time,
+            "Shift": planning.shift
+        })
+
+    # Créer le diagramme de Gantt avec Plotly
+    fig = px.timeline(
+        gantt_data,
+        x_start="Début",
+        x_end="Fin",
+        y="Employé",
+        color="Shift",
+        title="Planning des Tâches",
+        hover_data=["Produit"]
+    )
+    fig.update_layout(xaxis_title="Date et Heure", yaxis_title="Employé", showlegend=True)
+
+    # Convertir le graphique Plotly en HTML
+    gantt_chart_html = fig.to_html(full_html=False)
 
     if request.method == 'POST':
         action = request.POST.get('action')
@@ -232,6 +292,7 @@ def planning(request):
             messages.success(request, 'Planning mis à jour avec succès.')
 
         return redirect('planning')  # Redirige vers la même page après modification
+    
 
     # Récupérer les employés et les produits pour les afficher dans les formulaires
     employes = Employe.objects.all()
@@ -240,8 +301,10 @@ def planning(request):
     return render(request, 'planning.html', {
         'plannings': planning_list,
         'employes': employes,
-        'produits': produits
+        'produits': produits,
+        'gantt_chart_html': gantt_chart_html  # Passer le graphique au template
     })
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from .models import Production, Planning, Produit  # Assurez-vous que les modèles sont importés
@@ -260,12 +323,33 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .models import Production, Produit, Planning
 import json
+import os
+import json
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import Production, Planning, Produit
+import os
+import json
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from .models import Production, Planning, Produit, Cheese, Wine
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Production, Planning, Produit  # Assure-toi que les modèles sont correctement importés
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Production, Planning, Produit, Cheese, Wine  # Assure-toi d'importer les modèles nécessaires
+
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from .models import Production, Planning, Produit, Cheese, Wine
 
 def production(request):
     if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
         return redirect('login')
+
     if request.method == 'POST':
-        # Action de création ou de modification
         production_id = request.POST.get('production_id')
         action = request.POST.get('action')
 
@@ -305,31 +389,48 @@ def production(request):
             new_production.save()
             messages.success(request, 'Nouvelle production créée avec succès.')
 
-        return redirect('production_management')  # Rediriger vers la même page
+        return redirect('production')
 
-    # Charger les données JSON depuis le fichier
-    with open('data.json') as f:
-        data = json.load(f)
+    # Récupération des plannings
+    plannings = Planning.objects.all()
 
+    # Récupération des produits avec leurs noms depuis les tables Cheese et Wine
+    produits = []
+    for produit in Produit.objects.all():
+        try:
+            product_name = Cheese.objects.get(product_id=produit.product_id).name
+        except Cheese.DoesNotExist:
+            try:
+                product_name = Wine.objects.get(product_id=produit.product_id).name
+            except Wine.DoesNotExist:
+                product_name = f"Produit {produit.product_id}"  # Nom générique si non trouvé
+
+        produits.append({
+            'product_id': produit.product_id,
+            'product_name': product_name
+        })
+
+    # Préparation des données des productions
     productions = []
     for production in Production.objects.all():
-        product = production.product_id
-
-        # Rechercher le nom du produit dans order_fiche_produit
-        fiche_produit = next((item for item in data['order_fiche_produit'] if item['product_id'] == product.product_id), None)
-        product_name = fiche_produit['nom'] if fiche_produit else f"Produit {product.product_id}"
+        try:
+            product_name = Cheese.objects.get(product_id=production.product_id_id).name
+        except Cheese.DoesNotExist:
+            try:
+                product_name = Wine.objects.get(product_id=production.product_id_id).name
+            except Wine.DoesNotExist:
+                product_name = f"Produit {production.product_id_id}"
 
         productions.append({
             'production': production,
-            'product_name': product_name,  # Utiliser le nom du produit ici
+            'product_name': product_name,
         })
 
-    # Récupérer les plannings et produits pour les sélections
-    plannings = Planning.objects.all()
-    produits = Produit.objects.all()
-
-    return render(request, 'production.html', {'productions': productions, 'plannings': plannings, 'produits': produits})
-
+    return render(request, 'production.html', {
+        'productions': productions,
+        'plannings': plannings,
+        'produits': produits
+    })
 
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -615,6 +716,9 @@ from django.contrib import messages
 
 def catalog_management(request):
     # Chemin vers le fichier JSON
+    user_email = request.COOKIES.get('email', None)
+    if not request.COOKIES.get('email') or not request.COOKIES.get('access_level'):
+        return redirect('login')
     json_file_path = 'data.json'
 
     if request.method == 'POST':
@@ -991,6 +1095,8 @@ def order_history(request, order_id):
             return response
 
     return render(request, 'login.html')'''
+from django.shortcuts import redirect
+
 def login(request):
     ADMIN_EMAIL = 'lucie.martin@fromagerie.fr'
     EMPLOYEE_EMAILS = [
@@ -1000,9 +1106,10 @@ def login(request):
         'giulia.rossi@fromagerie.it',
         'john.smith@fromagerie.uk'
     ]
-        # Vérifie si l'utilisateur est déjà connecté
+
+    # Vérifie si l'utilisateur est déjà connecté
     if request.COOKIES.get('email') and request.COOKIES.get('access_level'):
-        return redirect('home.html')
+        return redirect('home')
 
     if 'login_submit' in request.POST:
         email = request.POST.get('email')
@@ -1011,19 +1118,23 @@ def login(request):
         user = Employe.objects.filter(contact__email=email, mdp=password).first()
         if not user:
             return render(request, 'login.html', {'error': 'Email ou mot de passe incorrect.'})
-        
+
         # Déterminer les droits d'accès
         if email == ADMIN_EMAIL:
             accessible_pages = 'admin'
         elif email in EMPLOYEE_EMAILS:
             accessible_pages = 'employee'
         else:
-            return render(request, 'login.html', {'error': 'Vous n\'avez pas les droits pour accéder à ce site.'})
+            # Rediriger vers home avec un message d'erreur sans déconnexion
+            response = redirect('home')
+            response.set_cookie('error_message', 'Vous n\'avez pas les droits pour accéder à cette page.', max_age=5)
+            return response
 
         # Définir un cookie pour les autorisations
         response = redirect('home')
         response.set_cookie('email', email)
         response.set_cookie('access_level', accessible_pages)  # Stocker le niveau d'accès
+        response['Cache-Control'] = 'no-store, no-cache, must-revalidate'  # Force le rechargement complet de la page
         return response
 
     return render(request, 'login.html')

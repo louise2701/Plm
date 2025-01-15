@@ -8,7 +8,6 @@
     {% load static %}
     <link rel="stylesheet" href="{% static 'styles/main.css' %}">
     <style>
-        /* Ajoutez ici vos styles */
         body {
             font-family: Arial, sans-serif;
             margin: 0;
@@ -79,20 +78,19 @@
             background-color: rgba(255, 255, 255, 0.8);
             border-radius: 10px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            max-width: 500px; /* Limit the width */
+            max-width: 500px;
         }
 
-        input, select {
-            width: calc(100% - 20px); /* Full width with some padding */
+        input, select, textarea {
+            width: calc(100% - 20px);
             padding: 10px;
             margin-bottom: 10px;
             border-radius: 5px;
             border: 1px solid #ddd;
         }
 
-        .inline {
-            display: inline-block;
-            margin-right: 10px;
+        textarea {
+            height: 100px;
         }
     </style>
 </head>
@@ -117,7 +115,7 @@
         <select name="product_id" required>
             <option value="">Choisir un Produit</option>
             {% for produit in produits %}
-                <option value="{{ produit.product_id }}">{{ produit.nom }}</option>
+                <option value="{{ produit.product_id }}">{{ produit.product_name }}</option>
             {% endfor %}
         </select>
         <input type="number" name="quantite_produite" placeholder="Quantité Produite" required>
@@ -132,6 +130,7 @@
         <input type="hidden" name="action" value="create">
         <button type="submit">Créer Production</button>
     </form>
+    
 
     <table>
         <thead>
@@ -180,7 +179,7 @@
                             <select name="product_id" required>
                                 <option value="">Choisir un Produit</option>
                                 {% for produit in produits %}
-                                    <option value="{{ produit.product_id }}" {% if produit.product_id == item.production.product_id_id %}selected{% endif %}>{{ produit.nom }}</option>
+                                    <option value="{{ produit.product_id }}" {% if produit.product_id == item.production.product_id_id %}selected{% endif %}>{{ produit }}</option>
                                 {% endfor %}
                             </select>
                             <input type="number" name="quantite_produite" value="{{ item.production.quantite_produite }}" placeholder="Quantité Produite" required>
